@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- 'override /env/glider/air_velocity_field@job.air_velocity_field:': stacked_decomposed_realistic/b0230_extrapolated
+- _self_
+job:
+  params:
+    trajectory_path: data/bird_comparison/processed/stork_trajectories/b023_0.1/data.csv
+    additional_columns:
+      thermal: b0230
+      bird_name: Snowy
+      mass_kg: 3.47
+      wing_area_m2: 0.6135183011448393
+      CL: 1.5
+      CD: 0.09
+      original_thermal_z_min: 510.9292
+      original_thermal_z_max: 1181.5762
+    trajectory_converter:
+      shift_time_s: 48626.0
+      filters:
+        bird_name: Snowy

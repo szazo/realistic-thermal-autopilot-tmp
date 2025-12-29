@@ -1,0 +1,35 @@
+[project]
+name = "thermalmodelling"
+
+version = "1.0.0"
+authors = [
+        { name="Correa Pereira Vasco De Lacerd Pedro", email="pedrolacerda@student.elte.hu" }
+]
+description = "Realistic Thermal Modelling and Decomposition Library"
+# readme = "README.md"
+requires-pyhton = ">=3.10"
+classifiers = [
+            "Programming Language :: Python :: 3",
+            "License :: OSI Approved :: MIT License",
+            "Operating System :: OS Independent"
+]
+
+dependencies = [
+  "dill ~= 0.3.8",
+  "h5py ~= 3.10.0",
+  "numba ~= 0.60.0",
+  "scikit-learn ~= 1.4.1",
+  "pandas ~= 1.5.3"
+]
+
+[project.urls]
+Homepage = "https://github.com/MTA-ELTE-Collective-Behaviour-Research/ThermalModelling.git"
+Issues = "https://github.com/MTA-ELTE-Collective-Behaviour-Research/ThermalModelling/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src"]
+sources = ["src"]

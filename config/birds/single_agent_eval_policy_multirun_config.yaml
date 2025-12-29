@@ -1,0 +1,15 @@
+defaults:
+  - single_agent_eval_policy_config
+  - _self_
+
+hydra:
+  callbacks:
+    merge_observation_logs:
+      _target_: utils.multirun_hydra_statistics_concat_callback.MultirunHydraStatisticsConcatCallback
+      input:
+        filepath: eval/main/observation_log.csv
+        index_column:
+        header: 0
+      output:
+        filename_prefix: merged_observation_log
+        target_dir: ???

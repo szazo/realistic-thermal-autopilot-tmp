@@ -1,0 +1,310 @@
+# https://taskfile.dev
+version: '3'
+
+vars:
+  # r / sqrt(2)   (50, 75, ....)
+  DISTANCE_R_LIST: [3.53553391, 35.35533906, 53.03300859, 70.71067812, 106.06601718, 176.7766953, 282.84271247, 424.26406871]
+  
+tasks:
+
+  train-single-agent:
+    requires:
+      vars:
+        - TRAIN_THERMAL
+        - TEST_THERMAL
+        - TRAIN_GLIDER
+        - TEST_GLIDER
+    vars:
+      DT_S: '{{.DT_S | default 0.2}}'
+      DECISION_DT_S: '{{.DECISION_DT_S | default 0.4}}'
+      SEQ_LENGTH: '{{.SEQ_LENGTH | default "50,75"}}'
+      STARTING_DISTANCE_M: '{{.STARTING_DISTANCE_M | default 20.}}'
+      STARTING_DISTANCE_SIGMA_M: '{{.STARTING_DISTANCE_SIGMA_M | default 10.}}'
+      TANGENT_DISTANCE_M: '{{.TANGENT_DISTANCE_M | default 10.}}'
+      TANGENT_DISTANCE_SIGMA_M: '{{.TANGENT_DISTANCE_SIGMA_M | default 5.}}'
+      PARAM_OVERRIDE: '{{.PARAM_OVERRIDE | default ""}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_train
+        --config-dir config/birds
+        --config-name 'bird_train_config'
+        --multirun
+        train_env.env.params.time_params.dt_s={{.DT_S}}
+        train_env.env.params.time_params.decision_dt_s={{.DECISION_DT_S}}
+        train_env.env.params.max_sequence_length={{.SEQ_LENGTH}}
+        train_env.env.params.initial_conditions_params.tangent_position_parameters.starting_distance_from_tangent_position_m_normal_mean={{.STARTING_DISTANCE_M}}
+        train_env.env.params.initial_conditions_params.tangent_position_parameters.starting_distance_from_tangent_position_m_normal_sigma={{.STARTING_DISTANCE_SIGMA_M}}
+        train_env.env.params.initial_conditions_params.tangent_position_parameters.tangent_distance_from_core_m_normal_mean={{.TANGENT_DISTANCE_M}}
+        train_env.env.params.initial_conditions_params.tangent_position_parameters.tangent_distance_from_core_m_normal_sigma={{.TANGENT_DISTANCE_SIGMA_M}}
+        env/glider/air_velocity_field@train_env.env.air_velocity_field={{.TRAIN_THERMAL}}
+        env/glider/air_velocity_field@test_env.env.air_velocity_field={{.TEST_THERMAL}}
+        env/glider/aerodynamics@train_env.env.aerodynamics={{.TRAIN_GLIDER}}
+        env/glider/aerodynamics@test_env.env.aerodynamics={{.TEST_GLIDER}}
+        {{.PARAM_OVERRIDE}}
+
+  train-multi-agent:
+    requires:
+      vars:
+        - TRAIN_THERMAL
+        - TEST_THERMAL
+        - TRAIN_GLIDER
+        - TEST_GLIDER
+        - DT_S
+        - DECISION_DT_S
+        - SEQ_LENGTH
+        - AGENT_SEQ_LENGTH
+        - PEER_POLICY_NEPTUNE_ID
+    cmds:
+      - >-
+        python -m rl.scripts.run_train
+        --config-dir config/birds
+        --config-name 'two_level_multi_agent_train_config'
+        --multirun
+        model.non_learning.model_source_logger.with_existing_id={{.PEER_POLICY_NEPTUNE_ID}}
+        train_env.env.params.time_params.dt_s={{.DT_S}}
+        train_env.env.params.time_params.decision_dt_s={{.DECISION_DT_S}}
+        train_env.env.params.max_sequence_length={{.SEQ_LENGTH}}
+        train_env.env.params.max_closest_agent_count={{.AGENT_SEQ_LENGTH}}
+        env/glider/air_velocity_field@train_env.env.air_velocity_field={{.TRAIN_THERMAL}}
+        env/glider/air_velocity_field@test_env.env.air_velocity_field={{.TEST_THERMAL}}
+        env/glider/aerodynamics@train_env.env.aerodynamics={{.TRAIN_GLIDER}}
+        env/glider/aerodynamics@test_env.env.aerodynamics={{.TEST_GLIDER}}
+
+  realistic:prepare-bird-trajectories:
+    vars:
+      GLOB: '{{.GLOB | default "*"}}'
+      LAUNCHER_OVERRIDE: '{{if .LAUNCHER}}hydra/launcher={{.LAUNCHER}}{{else}}{{end}}'
+      SLURM_PARALLELISM_OVERRIDE: '{{if .SLURM_PARALLELISM}}hydra.launcher.array_parallelism={{.SLURM_PARALLELISM}}{{else}}{{end}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_custom_job
+        --config-dir config/birds
+        --config-name 'prepare_bird_trajectory_multirun_config'
+        --multirun
+        hydra.callbacks.merge_observation_logs.output.target_dir="data/bird_comparison/processed/stork_trajectories_as_observation_log"
+        +realistic/prepare_bird_trajectories/birds_in_thermals="glob({{.GLOB}})"
+        {{.LAUNCHER_OVERRIDE}}
+        {{.SLURM_PARALLELISM_OVERRIDE}}
+
+
+  plot_realistic_thermals:
+    vars:
+      SPACING_M: '{{.SPACING_M | default "4"}}'
+      GLOB: '{{.GLOB | default "*"}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_plot_thermal
+        --config-dir config/birds
+        --config-name bird_plot_realistic_thermal_config
+        --multirun
+        plot_style=science
+        +target_dir_base=data/bird_comparison/processed/thermal_plots/realistic
+        +thermal_plots="glob({{.GLOB}})"
+        plot_config.horizontal.box.spacing_m={{.SPACING_M}}
+        plot_config.vertical.box.spacing_m={{.SPACING_M}}
+        plot_config.vertical.plot.projection=YZ
+        plot_config.vertical.plot.projection_type=max
+
+
+  eval-single-agent-policy:
+    requires:
+      vars:
+        - SEQ_LENGTH
+        - POLICY_NEPTUNE_ID
+        - OUTPUT_DIR
+        - TANGENT_DISTANCE_M
+        - STARTING_DISTANCE_M
+        - POLICY_CHECKPOINT_NAME
+        - THERMAL
+        - GLIDER
+    vars:
+      GLOB: '{{.GLOB | default "*"}}'
+      EPISODE_COUNT: '{{.EPISODE_COUNT | default 10}}'
+      SEED: '{{.SEED | default "null"}}'
+      DT_S: '{{.DT_S | default 0.2}}'
+      DECISION_DT_S: '{{.DECISION_DT_S | default 0.4}}'
+      TANGENT_DISTANCE_SIGMA_M: '{{.TANGENT_DISTANCE_SIGMA_M | default 0.}}'
+      STARTING_DISTANCE_SIGMA_M: '{{.STARTING_DISTANCE_SIGMA_M | default 0.}}'
+      OVERRIDES: '{{.OVERRIDES | default ""}}'
+      LAUNCHER_OVERRIDE: '{{if .LAUNCHER}}hydra/launcher={{.LAUNCHER}}{{else}}{{end}}'
+      SLURM_PARALLELISM_OVERRIDE: '{{if .SLURM_PARALLELISM}}hydra.launcher.array_parallelism={{.SLURM_PARALLELISM}}{{else}}{{end}}'
+      OUTPUT_FILENAME: '{{.OUTPUT_FILENAME | default "merged_observation_log"}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_eval
+        --config-dir config/birds
+        --config-name 'single_agent_eval_policy_multirun_config'
+        --multirun
+        hydra.callbacks.merge_observation_logs.output.target_dir="{{.OUTPUT_DIR}}"
+        hydra.callbacks.merge_observation_logs.output.filename_prefix="{{.OUTPUT_FILENAME}}"
+        model_source_logger.with_existing_id={{.POLICY_NEPTUNE_ID}}
+        checkpoint_name={{.POLICY_CHECKPOINT_NAME}}
+        evaluators.main.env.env.params.max_sequence_length={{.SEQ_LENGTH}}
+        evaluators.main.episode_count={{.EPISODE_COUNT}}
+        evaluators.main.seed={{.SEED}}
+        evaluators.main.env.env.params.time_params.dt_s={{.DT_S}}
+        evaluators.main.env.env.params.time_params.decision_dt_s={{.DECISION_DT_S}}
+        evaluators.main.env.env.params.initial_conditions_params.tangent_position_parameters.tangent_distance_from_core_m_normal_mean={{.TANGENT_DISTANCE_M}}
+        evaluators.main.env.env.params.initial_conditions_params.tangent_position_parameters.tangent_distance_from_core_m_normal_sigma={{.TANGENT_DISTANCE_SIGMA_M}}
+        evaluators.main.env.env.params.initial_conditions_params.tangent_position_parameters.starting_distance_from_tangent_position_m_normal_mean={{.STARTING_DISTANCE_M}}
+        evaluators.main.env.env.params.initial_conditions_params.tangent_position_parameters.starting_distance_from_tangent_position_m_normal_sigma={{.STARTING_DISTANCE_SIGMA_M}}
+        env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field={{.THERMAL}}
+        env/glider/aerodynamics@evaluators.main.env.env.aerodynamics={{.GLIDER}}
+        {{.OVERRIDES}}
+        {{.LAUNCHER_OVERRIDE}}
+        {{.SLURM_PARALLELISM_OVERRIDE}}
+        
+  realistic:eval-peer-informed-student-alone-from-different-distances:
+    requires:
+      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+    cmds:
+      - for:
+          var: DISTANCE_R_LIST
+        task: realistic:eval-peer-informed-student-with-birds
+        vars:
+          TANGENT_DISTANCE_M: '{{.ITEM}}'
+          STARTING_DISTANCE_M: '{{.ITEM}}'
+          AGENT_SEQ_LENGTH: 1
+          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_different_distances_using_train_glider/{{.POLICY_NEPTUNE_ID}}/student_alone/{{.EPISODE_COUNT}}_episodes'
+          OUTPUT_FILENAME: 'student_alone_{{.ITEM}}m_{{.ITEM}}m'
+          MULTIRUN_OVERRIDE: '+realistic/eval/peer_informed_with_birds/using_train_glider="glob({{.GLOB}})"'
+
+  realistic:eval-peer-informed-student-with-birds-from-different-distances:
+    requires:
+      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+    cmds:
+      - for:
+          var: DISTANCE_R_LIST
+        task: realistic:eval-peer-informed-student-with-birds
+        vars:
+          TANGENT_DISTANCE_M: '{{.ITEM}}'
+          STARTING_DISTANCE_M: '{{.ITEM}}'
+          AGENT_SEQ_LENGTH: '{{.AGENT_SEQ_LENGTH}}'
+          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/{{.POLICY_NEPTUNE_ID}}/{{.EPISODE_COUNT}}_episodes'
+          OUTPUT_FILENAME: 'student_with_birds_{{.ITEM}}m_{{.ITEM}}m'
+          MULTIRUN_OVERRIDE: '+realistic/eval/peer_informed_with_birds/using_train_glider="glob({{.GLOB}})"'
+
+  realistic:eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance:
+    requires:
+      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+    cmds:
+      - task: realistic:eval-peer-informed-student-with-birds
+        vars:
+          TANGENT_DISTANCE_M: 3.53553390
+          STARTING_DISTANCE_M: 3.53553390
+          AGENT_SEQ_LENGTH: '{{.AGENT_SEQ_LENGTH}}'
+          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/{{.EPISODE_COUNT}}_episodes'
+          OUTPUT_FILENAME: 'student_with_birds_using_bird_wing_loadings'
+          MULTIRUN_OVERRIDE: '+realistic/eval/peer_informed_with_birds/using_bird_wing_loadings="glob({{.GLOB}})"'
+
+  realistic:eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance:
+    requires:
+      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+    cmds:
+      - task: realistic:eval-peer-informed-student-with-birds
+        vars:
+          AGENT_SEQ_LENGTH: 1
+          TANGENT_DISTANCE_M: 3.53553390
+          STARTING_DISTANCE_M: 3.53553390
+          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/{{.EPISODE_COUNT}}_episodes'
+          OUTPUT_FILENAME: 'student_alone_using_bird_wing_loadings'
+          MULTIRUN_OVERRIDE: '+realistic/eval/peer_informed_with_birds/using_bird_wing_loadings="glob({{.GLOB}})"'
+
+          
+  realistic:eval-peer-informed-student-with-birds:
+    requires:
+      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, TANGENT_DISTANCE_M, STARTING_DISTANCE_M, OUTPUT_DIR, OUTPUT_FILENAME, MULTIRUN_OVERRIDE]
+    vars:
+      GLOB: '{{.GLOB | default "*"}}'
+      EPISODE_COUNT: '{{.EPISODE_COUNT | default 1}}'
+      LAUNCHER_OVERRIDE: '{{if .LAUNCHER}}hydra/launcher={{.LAUNCHER}}{{else}}{{end}}'
+      SLURM_PARALLELISM_OVERRIDE: '{{if .SLURM_PARALLELISM}}hydra.launcher.array_parallelism={{.SLURM_PARALLELISM}}{{else}}{{end}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_eval
+        --config-dir config/birds
+        --config-name 'multi_agent_eval_policy_multirun_config'
+        --multirun
+        hydra.callbacks.merge_observation_logs.output.filename_prefix="{{.OUTPUT_FILENAME}}"
+        model_source_logger.with_existing_id={{.POLICY_NEPTUNE_ID}}
+        checkpoint_name={{.POLICY_CHECKPOINT_NAME}}
+        evaluators.main.episode_count={{.EPISODE_COUNT}}
+        evaluators.main.env.env.params.max_sequence_length={{.SEQ_LENGTH}}
+        evaluators.main.env.env.params.max_closest_agent_count={{.AGENT_SEQ_LENGTH}}
+        evaluators.main.env.env.params.agent_groups.student.initial_conditions_params.tangent_position_parameters.starting_distance_from_tangent_position_m_normal_mean={{.STARTING_DISTANCE_M}}
+        evaluators.main.env.env.params.agent_groups.student.initial_conditions_params.tangent_position_parameters.tangent_distance_from_core_m_normal_mean={{.TANGENT_DISTANCE_M}}
+        hydra.callbacks.merge_observation_logs.output.target_dir="{{.OUTPUT_DIR}}"
+        {{.MULTIRUN_OVERRIDE}}
+        {{.LAUNCHER_OVERRIDE}}
+        {{.SLURM_PARALLELISM_OVERRIDE}}
+
+  play-realistic-observation-log:
+    requires:
+      vars: [OBS_LOG_FILEPATH, THERMAL]
+    vars:
+      SCENE: '{{.SCENE | default 0}}'
+      EPISODE: '{{.EPISODE | default 0}}'
+      TIME_S: '{{.TIME_S | default 0}}'
+      USE_CACHED: '{{.USE_CACHED | default true}}'
+      CACHE_KEY: '{{.CACHE_KEY | default (print .THERMAL) }}'
+      AIR_VELOCITY_SPACING_M: '{{.AIR_VELOCITY_SPACING_M | default "5"}}'
+      VOLUME_SPACING_M: '{{.VOLUME_SPACING_M | default "10"}}'
+      VIDEO_PATH: '{{.VIDEO_PATH | default ""}}'
+      VIDEO_FRAME_STEP_S: '{{.VIDEO_FRAME_STEP_S | default "0.8"}}'
+      VIDEO_FPS: '{{.VIDEO_FPS | default "6"}}'
+      CONFIG_DIR: '{{.CONFIG_DIR | default "config/birds"}}'
+      CONFIG_NAME: '{{.CONFIG_NAME | default "play_observation_log_config"}}'
+      OVERRIDES: '{{.OVERRIDES | default ""}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_custom_job
+        --config-dir '{{.CONFIG_DIR}}'
+        --config-name '{{.CONFIG_NAME}}'
+        env/glider/air_velocity_field@job.scene.air_velocity.field=stacked_decomposed_realistic/{{.THERMAL}}_extrapolated
+        job.observation_log_filepath={{.OBS_LOG_FILEPATH}}
+        job.scene.start_scene={{.SCENE}}
+        job.scene.start_episode={{.EPISODE}}
+        job.scene.start_time_s={{.TIME_S}}
+        job.scene.cache.use_cached={{.USE_CACHED}}
+        job.scene.cache.key={{.CACHE_KEY}}
+        observation_log_player@job.scene.air_velocity.sampler=polar_air_velocity_sampler
+        {{if .VIDEO_PATH}}+observation_log_player@job.scene=record_video job.scene.video.output_path={{.VIDEO_PATH}} job.scene.video.fps={{.VIDEO_FPS}} job.scene.fixed_frame_step_s={{.VIDEO_FRAME_STEP_S}}{{else}}{{end}}
+        job.scene.air_velocity.sampler.r_step_m={{.AIR_VELOCITY_SPACING_M}}
+        job.scene.air_velocity.sampler.z_step_m={{.AIR_VELOCITY_SPACING_M}}
+        job.scene.air_velocity.volume.spacing_m=[{{.VOLUME_SPACING_M}},{{.VOLUME_SPACING_M}},{{.VOLUME_SPACING_M}}]
+        +job.observation_log_filters.thermal={{.THERMAL}}
+        job.scene.air_velocity.field.params.enable_ray_parallelism=true
+        job.scene.air_velocity.field.params.ray_parallelism_params.actor_count=6
+        {{.OVERRIDES}}
+
+  play-gaussian-observation-log:
+    requires:
+      vars: [OBS_LOG_FILEPATH, THERMAL]
+    vars:
+      SCENE: '{{.SCENE | default 0}}'
+      EPISODE: '{{.EPISODE | default 0}}'
+      TIME_S: '{{.TIME_S | default 0}}'
+      AIR_VELOCITY_SPACING_M: '{{.AIR_VELOCITY_SPACING_M | default "10"}}'
+      VOLUME_SPACING_M: '{{.VOLUME_SPACING_M | default "10"}}'
+      VIDEO_PATH: '{{.VIDEO_PATH | default ""}}'
+      VIDEO_FRAME_STEP_S: '{{.VIDEO_FRAME_STEP_S | default "0.8"}}'
+      VIDEO_FPS: '{{.VIDEO_FPS | default "6"}}'
+      CONFIG_DIR: '{{.CONFIG_DIR | default "config/birds"}}'
+      CONFIG_NAME: '{{.CONFIG_NAME | default "play_observation_log_config"}}'
+      OVERRIDES: '{{.OVERRIDES | default ""}}'
+    cmds:
+      - >-
+        python -m rl.scripts.run_custom_job
+        --config-dir '{{.CONFIG_DIR}}'
+        --config-name '{{.CONFIG_NAME}}'
+        env/glider/air_velocity_field@job.scene.air_velocity.field={{.THERMAL}}
+        job.observation_log_filepath={{.OBS_LOG_FILEPATH}}
+        job.scene.start_scene={{.SCENE}}
+        job.scene.start_episode={{.EPISODE}}
+        job.scene.start_time_s={{.TIME_S}}
+        job.scene.cache.use_cached=true
+        {{if .VIDEO_PATH}}+observation_log_player@job.scene=record_video job.scene.video.output_path={{.VIDEO_PATH}} job.scene.video.fps={{.VIDEO_FPS}} job.scene.fixed_frame_step_s={{.VIDEO_FRAME_STEP_S}}{{else}}{{end}}
+        observation_log_player@job.scene.air_velocity.sampler=grid_air_velocity_sampler
+        job.scene.air_velocity.sampler.spacing_m=[{{.AIR_VELOCITY_SPACING_M}},{{.AIR_VELOCITY_SPACING_M}},{{.AIR_VELOCITY_SPACING_M}}]
+        job.scene.air_velocity.volume.spacing_m=[{{.VOLUME_SPACING_M}},{{.VOLUME_SPACING_M}},{{.VOLUME_SPACING_M}}]
+        {{.OVERRIDES}}

@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: balou
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b010_extrapolated
+experiment_name: b010_balou
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b010
+        bird_name: Balou
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 609.1557
+          cutoff_params:
+            success_altitude_m: 1494.897
+            fail_altitude_m: 309.1557

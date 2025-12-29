@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: frank
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b121_extrapolated
+experiment_name: b121_frank
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b121
+        bird_name: Frank
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 1304.6416
+          cutoff_params:
+            success_altitude_m: 1875.0852
+            fail_altitude_m: 1004.6415999999999

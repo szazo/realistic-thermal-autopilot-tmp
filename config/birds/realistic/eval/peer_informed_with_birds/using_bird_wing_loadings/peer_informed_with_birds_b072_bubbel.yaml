@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: bubbel
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b072_extrapolated
+experiment_name: peer_informed_with_birds_b072_bubbel
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b072
+        bird_name: Bubbel
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b072
+          cutoff_params:
+            success_altitude_m: 1171.5624
+            fail_altitude_m: 683.6609
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 983.6609

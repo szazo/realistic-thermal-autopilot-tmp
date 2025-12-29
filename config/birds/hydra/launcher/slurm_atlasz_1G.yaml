@@ -1,0 +1,20 @@
+defaults:
+  - slurm_base
+
+# slurm partition
+partition: hpc2019
+
+# for our task 1 cpu is enough
+cpus_per_task: 1
+
+# number of gpus for the tasks
+gpus_per_task: 0
+
+# minimum number of gpus per node
+gpus_per_node: 0
+
+# # memory requirement for each CPU
+mem_per_cpu: 1000M
+
+# # number of tasks which will run parallel (it is is submitit param, translated to slurm)
+array_parallelism: 10

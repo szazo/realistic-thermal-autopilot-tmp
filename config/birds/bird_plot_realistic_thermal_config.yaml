@@ -1,0 +1,43 @@
+defaults:
+  - experiment_config
+  - env/glider/air_velocity_field@air_velocity_field: ???
+  - override hydra/job_logging: custom_logging
+  - _self_
+
+show_plots_in_cli: false
+target_dir: ???
+
+air_velocity_field:
+  params:
+    enable_ray_parallelism: true
+    ray_parallelism_params:
+      actor_count: 6
+
+plot_config:
+  vertical:
+    plot:
+      horizontal_major_locator_gap_m: 100
+      horizontal_minor_locator_gap_count: 2
+      vertical_major_locator_gap_m: 100
+      vertical_minor_locator_gap_count: 2
+      projection: YZ
+    box:
+      spacing_m: 20.
+
+  horizontal:
+    box:
+      spacing_m: 20.
+
+hydra:
+  job_logging:
+    loggers:
+      StackedRealisticAirVelocityFieldAdapter:
+        level: DEBUG
+      StackedDecomposedRealisticAirVelocityField:
+        level: DEBUG
+      RealisticAirVelocityFieldRayAdapter:
+        level: DEBUG
+      StackedDecomposedRealisticGaussianFilterAdapter:
+        level: DEBUG
+      NoiseFieldGenerator:
+        level: DEBUG

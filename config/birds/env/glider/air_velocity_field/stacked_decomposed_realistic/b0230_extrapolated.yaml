@@ -1,0 +1,17 @@
+defaults:
+  - base_stacked_decomposed_realistic
+  - _self_
+
+params:
+  name: b0230
+  path: 'data/bird_comparison/decomposed_extrapolated_data/b023_0.1/decomposition/individual_bins/bin_z_size=10/optimized/n_resamples=1000/final/reconstructed'
+  max_extrapolated_distance: 20.
+
+  stack_gaussian_filter_params:
+    filter_size_xyz_m: [60., 60., 60.]
+    filter_sigma_xyz_m: [30., 30., 60.]
+    filter_spacing_xyz_m: [6., 6., 6.]
+    maximum_distance_from_core: 80.
+    segment_bottom_altitude_region_m: 10.
+    segment_top_altitude_region_m: 10.
+    amplitude_multiplier: 2.

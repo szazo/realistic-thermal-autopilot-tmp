@@ -1,0 +1,39 @@
+defaults:
+  - submitit_slurm
+
+# config schema: https://github.com/facebookresearch/hydra/blob/main/plugins/hydra_submitit_launcher/hydra_plugins/hydra_submitit_launcher/config.py
+  
+# SLURM hierarchy: job -> task -> cpu
+
+# slurm partition
+partition: cpu
+
+# for our job 1 node is enough
+nodes: 1
+
+# if we would have more tasks inside a job, we could define the placement of them (--ntasks-per-node)
+tasks_per_node: 1
+
+# we use only one task for the job (it cannot defined in submitit)
+# for our task 1 cpu is enough
+cpus_per_task: 1
+
+# number of gpus for the tasks
+gpus_per_task: 0
+
+# 1 GPU is enough for our job on a node
+gpus_per_node: 0
+
+# # number of tasks which will run parallel (it is is submitit param, translated to slurm)
+# array_parallelism: 10
+
+# the maximum time for the job; shorter jobs will have higher priority (--time)
+# timeout_min: 600
+timeout_min: 600
+
+additional_parameters:
+  mail-user: szazo@outlook.com
+  mail-type: ALL
+
+# redirect stderr to stdout
+# stderr_to_stdout: true

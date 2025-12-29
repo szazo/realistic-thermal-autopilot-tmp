@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: kim
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b121_extrapolated
+experiment_name: b121_kim
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b121
+        bird_name: Kim
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 1136.8541
+          cutoff_params:
+            success_altitude_m: 1688.4294
+            fail_altitude_m: 836.8541

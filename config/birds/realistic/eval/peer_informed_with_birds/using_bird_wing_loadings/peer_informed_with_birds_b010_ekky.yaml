@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: ekky
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b010_extrapolated
+experiment_name: peer_informed_with_birds_b010_ekky
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b010
+        bird_name: Ekky
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b010
+          cutoff_params:
+            success_altitude_m: 1288.4258
+            fail_altitude_m: 513.3271
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 813.3271

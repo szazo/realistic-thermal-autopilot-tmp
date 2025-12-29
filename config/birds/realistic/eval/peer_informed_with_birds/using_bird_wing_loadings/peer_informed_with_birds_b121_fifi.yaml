@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: fifi
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b121_extrapolated
+experiment_name: peer_informed_with_birds_b121_fifi
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b121
+        bird_name: Fifi
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b121
+          cutoff_params:
+            success_altitude_m: 1686.0819
+            fail_altitude_m: 1037.7651
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 1337.7651

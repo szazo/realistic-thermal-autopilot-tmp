@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: niclas
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b010_extrapolated
+experiment_name: peer_informed_with_birds_b010_niclas
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b010
+        bird_name: Niclas
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b010
+          cutoff_params:
+            success_altitude_m: 982.3649
+            fail_altitude_m: 497.01099999999997
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 797.011

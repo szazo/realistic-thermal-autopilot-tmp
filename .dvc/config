@@ -1,0 +1,4 @@
+[core]
+    remote = hal
+['remote "hal"']
+    url = ssh://zszarvas@hal.elte.hu:/data/users/zszarvas/glider_dvc_repo

@@ -1,0 +1,312 @@
+defaults:
+  - experiment_config
+  - custom_job@job: observation_log_player
+  # - /env/glider/air_velocity_field@job.scene.air_velocity_field: bird_train_thermal_wind_turbulence
+  - env/glider/air_velocity_field@job.scene.air_velocity.field: ???
+  # - observation_log_player@job.scene.air_velocity.sampler: polar_air_velocity_sampler
+  - observation_log_player@job.scene.air_velocity.sampler: ???
+  - override hydra/job_logging: custom_logging
+  - _self_
+
+job:
+  observation_log_filepath: ???
+  # observation_log_filters:
+  #   thermal: ???
+  scene:
+    start_scene: 0
+    start_episode: 0
+    start_time_s: 0.
+
+    timer_dt_ms: 100
+    frame_selection: wall_time
+    wall_time_playback_speed: 5
+
+    world_box: false
+    axes:
+      type: 4
+      # custom:
+      #   text_scale: 0.3
+      #   xtick_length: 0.025
+      #   xtick_thickness: 0.0015
+      #   ytick_thickness: 0.0015
+      #   xtitle: x (m)
+      #   ytitle: y (m)
+      #   ztitle: z (m)
+
+    hide_button_on_start: false
+    annotation:
+      speed: true
+      scene: true
+      episode: true
+      time: true
+
+    colorbar:
+      title:
+      values: [0., 1., 2.0, 3.0, 4.0, 5.0]
+      label_format: :6.1f
+      pos: [0.86, -0.02]
+      latex:
+        pos: [0.945,0.32]
+        size: 0.08
+        text: v_z~(\mathrm{m~s}^{-1})
+
+    video:
+    minimum_display_box:
+      box_size: [3000,3000,1600]
+
+    cache:
+      use_cached: true
+    air_velocity:
+      volume:
+        spacing_m: [10,10,10]
+      display:
+        thermal_color_map:
+          min_value: -2.
+          max_value: 5.
+        volume:
+          render_mode: max_projection
+          scalar: w
+          alpha:
+            curve:
+              - value: -2.
+                opacity: 0.
+              - value: 0.01
+                opacity: 0.
+              - value: 0.2
+                opacity: 0.2
+              - value: 0.3
+                opacity: 0.3
+            # only affects composite render_mode
+            attenuation_unit_length_m: 300.
+        points:
+          r_m: 3.
+          cmap_scalar: w
+          filter:
+            threshold:
+              above: 0.00001
+              below: 100.
+              scalar: w
+            max_points: 3000
+        streamlines:
+          cmap_scalar: w
+          max_propagation_m: 250.
+          initial_step_size: 0.01
+          integrator: rk45
+          alpha: 0.5
+          linewidth: 1.
+          seed_filter:
+            threshold:
+              above: 0.00001
+              below: 100.
+              scalar: w
+            max_points: 800
+        arrows:
+          scale: 1.5
+          alpha: 0.5
+          color: k5
+
+    agents:
+      trail:
+        length_s: 40.
+        min_interval_s: 0.2
+        linewidth: 3
+        alpha_min: 0.05
+        alpha_max: 1.0
+      colormap_name: tab20
+      velocity_arrow:
+        size: 0.02
+        length_scale: 1
+      map:
+        bird_train_glider:
+          color_index: 0
+          flagpost:
+          velocity_arrow: true
+          mesh:
+            path: glider.ply
+            scale: 10.
+        student0:
+          color_index: 0
+          flagpost:
+            # show_agent_name: False
+          velocity_arrow: true
+          mesh:
+            path: glider.ply
+            scale: 10.
+        Balou:
+          color_index: 1
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Betty:
+          color_index: 2
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Bubbel:
+          color_index: 3
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Conchito:
+          color_index: 4
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Cookie:
+          color_index: 5
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Crisps:
+          color_index: 6
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Ekky:
+          color_index: 7
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Ella:
+          color_index: 8
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Fanny:
+          color_index: 9
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Fifi:
+          color_index: 10
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Flummy:
+          color_index: 11
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Frank:
+          color_index: 12
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Hannibal:
+          color_index: 13
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Kim:
+          color_index: 14
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Kristall:
+          color_index: 15
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Mirabell:
+          color_index: 16
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Muffine:
+          color_index: 17
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Niclas:
+          color_index: 18
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Ohnezahn:
+          color_index: 19
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Peaches:
+          color_index: 20
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Redrunner:
+          color_index: 21
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Ronja:
+          color_index: 22
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Snowy:
+          color_index: 23
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+        Tobi:
+          color_index: 24
+          flagpost:
+          velocity_arrow: false
+          mesh:
+            path: stork.ply
+            scale: 7.
+
+hydra:
+  job_logging:
+    loggers:
+      ObservationLogPlayerJob:
+        level: DEBUG
+      AirVelocitySceneActor:
+        level: DEBUG
+#       GliderAgentActor:
+#         level: DEBUG

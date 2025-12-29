@@ -1,0 +1,12 @@
+defaults:
+  - ray
+
+ray:
+  # number of cpus and gpus allowed to use by ray
+  init:
+    num_gpus: 1
+    num_cpus: 16
+  # number of cpus and gpus allowed to use a ray task
+  remote:
+    num_gpus: 0.1
+    num_cpus: 2

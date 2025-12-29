@@ -1,0 +1,457 @@
+stages:
+  train_single_agent:
+    cmd: >-
+      task train-single-agent
+      SEQ_LENGTH=${train.single_agent.seq_length}
+      DT_S=${train.single_agent.timing.dt_s}
+      DECISION_DT_S=${train.single_agent.timing.decision_dt_s}
+      STARTING_DISTANCE_M=${train.single_agent.initial.starting_distance_from_tangent_position_m_normal_mean}
+      STARTING_DISTANCE_SIGMA_M=${train.single_agent.initial.starting_distance_from_tangent_position_m_normal_sigma}
+      TANGENT_DISTANCE_M=${train.single_agent.initial.tangent_distance_from_core_m_normal_mean}
+      TANGENT_DISTANCE_SIGMA_M=${train.single_agent.initial.tangent_distance_from_core_m_normal_sigma}
+      TRAIN_THERMAL=${train.single_agent.thermal.train}
+      TEST_THERMAL=${train.single_agent.thermal.test}
+      TRAIN_GLIDER=${train.single_agent.glider.train}
+      TEST_GLIDER=${train.single_agent.glider.test}
+    params:
+      - train.single_agent
+    deps:
+      - config/birds/bird_train_config.yaml
+  train_multi_agent:
+    cmd: >-
+      task train-multi-agent
+      SEQ_LENGTH=${train.multi_agent.seq_length}
+      AGENT_SEQ_LENGTH=${train.multi_agent.agent_seq_length}
+      DT_S=${train.multi_agent.timing.dt_s}
+      DECISION_DT_S=${train.multi_agent.timing.decision_dt_s}
+      TRAIN_THERMAL=${train.multi_agent.thermal.train}
+      TEST_THERMAL=${train.multi_agent.thermal.test}
+      TRAIN_GLIDER=${train.multi_agent.glider.train}
+      TEST_GLIDER=${train.multi_agent.glider.test}
+      PEER_POLICY_NEPTUNE_ID=${train.multi_agent.peer_policy.neptune_id}
+    params:
+      - train.multi_agent
+    deps:
+      - config/birds/two_level_multi_agent_train_config.yaml
+
+  download_bird_data:
+    cmd: python rl/bird_comparison/scripts/download_data.py $BIRD_DATA_DOWNLOAD_PASSWORD
+    deps:
+      - rl/bird_comparison/scripts/download_data.py
+    outs:
+      - data/bird_comparison/input_stork_data
+      - data/bird_comparison/wing_loading_stork
+      - data/bird_comparison/decomposed_extrapolated_data
+      - data/bird_comparison/stork_meta
+  preprocess_bird_data:
+    cmd: python rl/bird_comparison/scripts/include_bank_angle.py
+    deps:
+      - data/bird_comparison/input_stork_data
+      - data/bird_comparison/decomposed_extrapolated_data
+    outs:
+      - data/bird_comparison/processed/stork_trajectories
+  generate_bird_experiment_configs:
+    cmd: python rl/bird_comparison/scripts/generate_bird_experiment_configs.py
+    deps:
+      - data/bird_comparison/wing_loading_stork/wing_loadings.csv
+      - data/bird_comparison/processed/stork_trajectories
+    outs:
+      - config/birds/realistic/prepare_bird_trajectories/birds_in_thermals:
+          cache: false
+      - config/birds/realistic/eval/env/aerodynamics:
+          cache: false
+      - config/birds/realistic/eval/single_agent/using_bird_wing_loadings:
+          cache: false
+      - config/birds/realistic/eval/peer_informed_with_birds/using_bird_wing_loadings:
+          cache: false
+
+  generate_realistic_thermal_plots:
+    foreach: ${thermal_plots.realistic.thermals}
+    do:
+      cmd: task plot_realistic_thermals GLOB="${item}" SPACING_M=${thermal_plots.realistic.spacing_m} $EXTRA
+      deps:
+        - data/bird_comparison/decomposed_extrapolated_data
+        - config/birds/thermal_plots/${item}.yaml
+      params:
+        - thermal_plots.realistic
+      outs:
+        - data/bird_comparison/processed/thermal_plots/realistic/${item}
+
+  prepare_bird_trajectories:
+    cmd: task realistic:prepare-bird-trajectories GLOB="*" LAUNCHER=slurm_atlasz_1G
+    deps:
+      - config/birds/realistic/prepare_bird_trajectories/birds_in_thermals
+      - data/bird_comparison/processed/stork_trajectories
+    outs:
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log
+
+  # From different distances
+  eval-peer-informed-student-alone-from-different-distances:
+    cmd: >-
+      task realistic:eval-peer-informed-student-alone-from-different-distances
+      POLICY_NEPTUNE_ID=${eval.policy.neptune_id}
+      POLICY_CHECKPOINT_NAME=${eval.policy.checkpoint_name}
+      SEQ_LENGTH=${eval.policy.seq_length}
+      EPISODE_COUNT=${eval.from_different_distances.episode_count}
+      GLOB="${eval.from_different_distances.student_alone.glob}"
+    params:
+      - eval.policy
+      - eval.from_different_distances.student_alone
+    outs:
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/${eval.policy.neptune_id}/${eval.from_different_distances.episode_count}_episodes
+
+  eval-peer-informed-student-with-birds-from-different-distances:
+    cmd: >-
+      task realistic:eval-peer-informed-student-with-birds-from-different-distances
+      POLICY_NEPTUNE_ID=${eval.policy.neptune_id}
+      POLICY_CHECKPOINT_NAME=${eval.policy.checkpoint_name}
+      SEQ_LENGTH=${eval.policy.seq_length}
+      AGENT_SEQ_LENGTH=${eval.policy.agent_seq_length}
+      EPISODE_COUNT=${eval.from_different_distances.episode_count}
+      GLOB="${eval.from_different_distances.student_with_birds.glob}"
+    params:
+      - eval.policy
+      - eval.from_different_distances.student_with_birds
+    outs:
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/${eval.policy.neptune_id}/${eval.from_different_distances.episode_count}_episodes
+
+  # From close distance using bird wing loadings
+  eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance:
+    cmd: >-
+      task realistic:eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance
+      POLICY_NEPTUNE_ID=${eval.policy.neptune_id}
+      POLICY_CHECKPOINT_NAME=${eval.policy.checkpoint_name}
+      SEQ_LENGTH=${eval.policy.seq_length}
+      EPISODE_COUNT=${eval.from_close_distance.episode_count}
+      GLOB="${eval.from_close_distance.student_alone.glob}"
+    params:
+      - eval.policy
+      - eval.from_close_distance.student_alone
+    outs:
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+
+  eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance:
+    cmd: >-
+      task realistic:eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance
+      POLICY_NEPTUNE_ID=${eval.policy.neptune_id}
+      POLICY_CHECKPOINT_NAME=${eval.policy.checkpoint_name}
+      SEQ_LENGTH=${eval.policy.seq_length}
+      AGENT_SEQ_LENGTH=${eval.policy.agent_seq_length}
+      EPISODE_COUNT=${eval.from_close_distance.episode_count}
+      GLOB="${eval.from_close_distance.student_with_birds.glob}"
+    params:
+      - eval.policy
+      - eval.from_close_distance.student_with_birds
+    outs:
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+      
+  generate_altitude_achievement_percent_by_distance_analysis:
+    cmd: >-
+      python -m bird_comparison.analysis.different_distances_train_wing_loading.generate_altitude_achievement_percent_by_distance_analysis
+      --policy-neptune-run-id ${eval.policy.neptune_id}
+      --episode-count ${eval.from_different_distances.episode_count}
+      --r-distances ${eval.from_different_distances.r_distances}
+    params:
+      - eval.policy
+      - eval.from_different_distances
+    deps:
+      - rl/bird_comparison/analysis/common
+      - rl/bird_comparison/analysis/different_distances_train_wing_loading/generate_altitude_achievement_percent_by_distance_analysis.py
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/${eval.policy.neptune_id}/${eval.from_different_distances.episode_count}_episodes
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/${eval.policy.neptune_id}/${eval.from_different_distances.episode_count}_episodes
+    outs:
+      - results/analysis/from_different_distances_using_train_glider/altitude_achievement_percent
+
+  generate_different_distances_wind_speed_analysis:
+    cmd: >-
+      python -m bird_comparison.analysis.different_distances_train_wing_loading.generate_wind_speed_analysis
+      --policy-neptune-run-id ${eval.policy.neptune_id}
+      --episode-count ${eval.from_different_distances.episode_count}
+      --r-distances ${eval.from_different_distances.r_distances}
+    params:
+      - eval.policy
+      - eval.from_different_distances
+    deps:
+      - rl/bird_comparison/analysis/common
+      - rl/bird_comparison/analysis/different_distances_train_wing_loading/generate_wind_speed_analysis.py
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/${eval.policy.neptune_id}/${eval.from_different_distances.episode_count}_episodes
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/${eval.policy.neptune_id}/${eval.from_different_distances.episode_count}_episodes
+    outs:
+      - results/analysis/from_different_distances_using_train_glider/wind_speed
+
+  generate_close_distance_vertical_velocity_analysis:
+    cmd: >-
+      python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_vertical_velocity_analysis
+      --policy-neptune-run-id ${eval.policy.neptune_id}
+      --episode-count ${eval.from_close_distance.episode_count}
+      --n_bootstrap ${eval.from_close_distance.n_bootstrap}
+    params:
+      - eval.policy
+      - eval.from_close_distance
+    deps:
+      - rl/bird_comparison/analysis/common
+      - rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_vertical_velocity_analysis.py
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+    outs:
+      - results/analysis/from_close_distance_using_bird_wing_loadings/vertical_velocity
+
+
+  generate_close_distance_episode_success_analysis:
+    cmd: >-
+      python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_episode_success_analysis
+      --policy-neptune-run-id ${eval.policy.neptune_id}
+      --episode-count ${eval.from_close_distance.episode_count}
+    params:
+      - eval.policy
+      - eval.from_close_distance
+    deps:
+      - rl/bird_comparison/analysis/common
+      - rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_episode_success_analysis.py
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+    outs:
+      - results/analysis/from_close_distance_using_bird_wing_loadings/episode_success
+
+  generate_realistic_thermal_trajectory_plots:
+    foreach: ${thermal_trajectory_plots}
+    do:
+      cmd: >-
+        python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+        --datasource.policy-neptune-run-id ${eval.policy.neptune_id}
+        --datasource.episode-count ${eval.from_close_distance.episode_count}
+        --plot.thermal ${item.thermal}
+        --plot.episode ${item.episode}
+        --plot.bird_name ${item.bird_name}
+        --plot.setup ${item.setup}
+      params:
+        - eval.policy
+        - eval.from_close_distance
+      deps:
+        - rl/thermal/visualization
+        - rl/bird_comparison/analysis/common
+        - rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+        - data/bird_comparison/processed/stork_trajectories_as_observation_log
+        - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+        - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/${eval.policy.neptune_id}/${eval.from_close_distance.episode_count}_episodes
+        - data/bird_comparison/processed/thermal_plots/realistic/${item.thermal}
+      outs:
+        - results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/${item.thermal}-${item.bird_name}-${item.episode}.png
+        - results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/${item.thermal}-${item.bird_name}-${item.episode}.svg
+
+
+  generate_glider_with_birds_in_realistic_thermal_video_csv:
+    cmd: >-
+       python -m bird_comparison.scripts.create_video_csv
+    deps:
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log/merged_observation_log.csv
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes/student_with_birds_424.26406871m_424.26406871m.csv
+    outs:
+      - data/bird_comparison/processed/video/video.csv
+  generate_glider_with_birds_in_realistic_thermal_video:
+    cmd: >-
+       task play-realistic-observation-log
+       OBS_LOG_FILEPATH=data/bird_comparison/processed/video/video.csv
+       SCENE=0
+       EPISODE=0
+       TIME_S=0.
+       AIR_VELOCITY_SPACING_M=5
+       VOLUME_SPACING_M=10
+       USE_CACHED=true
+       THERMAL=b010
+       VIDEO_PATH=results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+       VIDEO_FRAME_STEP_S=0.1
+       VIDEO_FPS=30
+       CONFIG_DIR=config/birds/videos
+       CONFIG_NAME=realistic_with_birds
+    deps:
+      - data/bird_comparison/processed/video/video.csv
+    outs:
+      - results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+
+  encode_glider_with_birds_in_realistic_thermal_video:
+    cmd: >-
+        ffmpeg
+        -i results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+        -c:v libx264
+        -pix_fmt yuv420p
+        -crf 5
+        -profile:v high
+        -preset veryslow
+        -c:a copy
+        -y
+        results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
+    deps:
+      - results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+    outs:
+      - results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
+
+  single_agent_eval_for_training_video_160m:
+    foreach: [1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 75, 100, 112]
+    do:
+      cmd: >-
+        task eval-single-agent-policy
+        SEQ_LENGTH=50
+        POLICY_NEPTUNE_ID=GLID-5000
+        POLICY_CHECKPOINT_NAME=weights${item}
+        OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m
+        OUTPUT_FILENAME=epoch${item}
+        THERMAL=bird_single_agent_train_thermal
+        GLIDER=bird_glider_wing_loading_7
+        DT_S=0.4
+        DECISION_DT_S=0.8
+        EPISODE_COUNT=1
+        OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'"
+        TANGENT_DISTANCE_M=50.
+        STARTING_DISTANCE_M=150.
+      outs:
+        - results/eval/gaussian/single_agent/during_training/160m/epoch${item}.csv
+
+  generate_single_agent_training_video_160m:
+    foreach: [1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 75, 100, 112]
+    do:
+      cmd: >-
+         task play-gaussian-observation-log
+         OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch${item}.csv
+         SCENE=1
+         EPISODE=0
+         TIME_S=0.
+         AIR_VELOCITY_SPACING_M=20
+         VOLUME_SPACING_M=10
+         USE_CACHED=true
+         THERMAL=bird_single_agent_train_thermal
+         CONFIG_DIR=config/birds/videos
+         CONFIG_NAME=gaussian_during_training_160m
+         VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video${item}.mp4
+         VIDEO_FRAME_STEP_S=0.5
+         VIDEO_FPS=50
+      deps:
+        - results/eval/gaussian/single_agent/during_training/160m/epoch${item}.csv
+      outs:
+        - results/videos/gaussian_train/raw/from_160m_distance/video${item}.mp4
+
+        
+  single_agent_eval_for_training_video_300m:
+    foreach: [112]
+    do:
+      cmd: >-
+        task eval-single-agent-policy
+        SEQ_LENGTH=50
+        POLICY_NEPTUNE_ID=GLID-5000
+        POLICY_CHECKPOINT_NAME=weights${item}
+        OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/300m
+        OUTPUT_FILENAME=epoch${item}
+        THERMAL=bird_single_agent_train_thermal
+        GLIDER=bird_glider_wing_loading_7
+        DT_S=0.4
+        DECISION_DT_S=0.8
+        EPISODE_COUNT=1
+        OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'"
+        TANGENT_DISTANCE_M=212.13
+        STARTING_DISTANCE_M=212.13
+      outs:
+        - results/eval/gaussian/single_agent/during_training/300m/epoch${item}.csv
+
+  generate_single_agent_training_video_300m:
+    foreach: [112]
+    do:
+      cmd: >-
+         task play-gaussian-observation-log
+         OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/300m/epoch${item}.csv
+         SCENE=1
+         EPISODE=0
+         TIME_S=0.
+         AIR_VELOCITY_SPACING_M=20
+         VOLUME_SPACING_M=10
+         USE_CACHED=true
+         THERMAL=bird_single_agent_train_thermal
+         CONFIG_DIR=config/birds/videos
+         CONFIG_NAME=gaussian_during_training_300m
+         VIDEO_PATH=results/videos/gaussian_train/raw/from_300m_distance/video${item}.mp4
+         VIDEO_FRAME_STEP_S=0.5
+         VIDEO_FPS=50
+      deps:
+        - results/eval/gaussian/single_agent/during_training/300m/epoch${item}.csv
+      outs:
+        - results/videos/gaussian_train/raw/from_300m_distance/video${item}.mp4
+  create_snapshot_archive:
+    cmd:
+      - rm -rf tmp_snapshot
+      - dvc get . data/ --out tmp_snapshot/data
+      - dvc get . results/ --out tmp_snapshot/results
+      - (cd tmp_snapshot && tar -czvf ../snapshot_v1.tar.gz *)
+      - rm -rf tmp_snapshot
+    deps:
+      - data/
+      - results/
+  load_snapshot_archive:
+    cmd:
+      - rm -rf snapshot_v1.tar.gz
+      - http --download "https://sandbox.zenodo.org/records/420119/files/snapshot_v1.tar.gz?download=1"
+      - tar -xzvf snapshot_v1.tar.gz
+    deps:
+      - https://sandbox.zenodo.org/records/420119/files/snapshot_v1.tar.gz?download=1
+    outs:
+      - data/bird_comparison/decomposed_extrapolated_data
+      - data/bird_comparison/input_stork_data
+      - data/bird_comparison/processed/stork_trajectories
+      - data/bird_comparison/processed/stork_trajectories_as_observation_log
+      - data/bird_comparison/processed/thermal_plots/realistic/b010
+      - data/bird_comparison/processed/thermal_plots/realistic/b0230
+      - data/bird_comparison/processed/thermal_plots/realistic/b072
+      - data/bird_comparison/processed/thermal_plots/realistic/b077
+      - data/bird_comparison/processed/thermal_plots/realistic/b112
+      - data/bird_comparison/processed/thermal_plots/realistic/b121
+      - data/bird_comparison/processed/video/video.csv
+      - data/bird_comparison/stork_meta
+      - data/bird_comparison/wing_loading_stork
+      - results/analysis/from_close_distance_using_bird_wing_loadings/episode_success
+      - results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.png
+      - results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.svg
+      - results/analysis/from_close_distance_using_bird_wing_loadings/vertical_velocity
+      - results/analysis/from_different_distances_using_train_glider/altitude_achievement_percent
+      - results/analysis/from_different_distances_using_train_glider/wind_speed
+      - results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
+      - results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
+      - results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      - results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/GLID-4924/100_episodes
+      - results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes
+      - results/videos/gaussian_train/raw/from_160m_distance/video1.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video10.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video100.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video112.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video15.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video2.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video20.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video25.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video3.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video30.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video35.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video4.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video40.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video5.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video50.mp4
+      - results/videos/gaussian_train/raw/from_160m_distance/video75.mp4
+      - results/videos/gaussian_train/raw/from_300m_distance/video112.mp4
+      - results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
+      - results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4

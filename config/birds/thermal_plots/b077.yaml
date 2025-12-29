@@ -1,0 +1,23 @@
+# @package _global_
+defaults:
+  - override /env/glider/air_velocity_field@air_velocity_field: stacked_decomposed_realistic/b077_extrapolated
+
+target_dir: ${target_dir_base}/b077
+    
+plot_config:
+  horizontal:
+    box:
+      sample_altitude_m: 1100
+      spacing_m: 1.
+      box_size_xy_m: [300,300]
+    plot:
+      major_locator_gap_m: 50
+  vertical:
+    box:
+      altitude_range_m: [900, 1500]
+      spacing_m: 1.
+      box_size_xyz_m:
+      center_xyz_m:
+    plot:
+      horizontal_major_locator_gap_m: 80
+      vertical_major_locator_gap_m: 100

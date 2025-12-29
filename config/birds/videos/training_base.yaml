@@ -1,0 +1,27 @@
+# @package _global_
+defaults:
+  - /play_observation_log_config
+  - _self_
+
+job:
+  scene:
+    hide_button_on_start: true
+    annotation:
+      speed: true
+      scene: false
+      episode: false
+      time: true
+
+    air_velocity:
+      display:
+        points:
+          filter:
+            threshold:
+              above: 0.5
+            max_points: 1000
+        streamlines:
+          max_propagation_m: 150.
+          seed_filter:
+            threshold:
+              above: 0.5
+            max_points: 300

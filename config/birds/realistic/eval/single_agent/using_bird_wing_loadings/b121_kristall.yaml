@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: kristall
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b121_extrapolated
+experiment_name: b121_kristall
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b121
+        bird_name: Kristall
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 1130.861
+          cutoff_params:
+            success_altitude_m: 1872.7196
+            fail_altitude_m: 830.8610000000001

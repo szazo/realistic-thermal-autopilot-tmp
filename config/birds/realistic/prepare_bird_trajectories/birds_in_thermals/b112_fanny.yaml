@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- 'override /env/glider/air_velocity_field@job.air_velocity_field:': stacked_decomposed_realistic/b112_extrapolated
+- _self_
+job:
+  params:
+    trajectory_path: data/bird_comparison/processed/stork_trajectories/b112_0.2/data.csv
+    additional_columns:
+      thermal: b112
+      bird_name: Fanny
+      mass_kg: 2.63
+      wing_area_m2: 0.41184432973353197
+      CL: 1.5
+      CD: 0.09
+      original_thermal_z_min: 1347.7074
+      original_thermal_z_max: 1557.0315
+    trajectory_converter:
+      shift_time_s: 0.0
+      filters:
+        bird_name: Fanny

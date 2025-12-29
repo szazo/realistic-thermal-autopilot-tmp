@@ -1,0 +1,10 @@
+location: .gitman
+sources:
+  - repo: https://github.com/MTA-ELTE-Collective-Behaviour-Research/ThermalModelling.git
+    name: ThermalModelling
+    rev: abf75677f242691b88ad5a9fc32848b025e32b6b
+    links:
+      - target: thirdparty/thermalmodelling/src
+default_group: ''
+groups:
+  -

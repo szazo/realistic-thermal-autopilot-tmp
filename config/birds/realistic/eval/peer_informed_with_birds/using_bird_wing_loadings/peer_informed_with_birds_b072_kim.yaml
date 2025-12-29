@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: kim
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b072_extrapolated
+experiment_name: peer_informed_with_birds_b072_kim
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b072
+        bird_name: Kim
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b072
+          cutoff_params:
+            success_altitude_m: 1048.1338
+            fail_altitude_m: 688.4704
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 988.4704

@@ -1,0 +1,16 @@
+# @package _global_
+defaults:
+  - training_base
+  - _self_
+
+job:
+  scene:
+    camera:
+      pos: [-866.383, 560.343, 718.314]
+      focal_point: [-120.842, 264.776, 475.714]
+      viewup: [0.278695, -0.0823849, 0.956840]
+      clipping_range: [5.33555, 5335.55]
+
+hydra:
+  searchpath:
+    - pkg://config/birds

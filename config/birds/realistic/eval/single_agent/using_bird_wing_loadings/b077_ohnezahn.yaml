@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: ohnezahn
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b077_extrapolated
+experiment_name: b077_ohnezahn
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b077
+        bird_name: Ohnezahn
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 1050.938
+          cutoff_params:
+            success_altitude_m: 1617.0485
+            fail_altitude_m: 750.9380000000001

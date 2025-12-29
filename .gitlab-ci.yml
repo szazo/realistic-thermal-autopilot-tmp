@@ -1,0 +1,37 @@
+stages:
+  - test
+
+# include:
+#   - template: Jobs/Code-Quality.gitlab-ci.yml
+
+# code_quality_html:
+#   extends: code_quality
+#   variables:
+#     REPORT_FORMAT: html
+#   artifacts:
+#     paths: [gl-code-quality-report.html]
+
+# build:
+#   image: node:18
+#   stage: test
+#   allow_failure: true
+#   before_script:
+#     - npm i -g pyright
+#     - npm i -g pyright-to-gitlab-ci
+#   script:
+#    - pyright rl --outputjson --skipunannotated > report_raw.json
+#   after_script:
+#    - pyright-to-gitlab-ci --src report_raw.json --output report.json --base_path .
+#   artifacts:
+#     paths:
+#       - report.json
+#     reports:
+#       codequality: report.json
+
+test:
+  image: python:3.11
+  stage: test
+  before_script:
+    - python -m pip install --editable ".[dev]"
+  script:
+    - python -m pytest

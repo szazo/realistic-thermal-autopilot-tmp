@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: conchito
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b010_extrapolated
+experiment_name: b010_conchito
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b010
+        bird_name: Conchito
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 601.5285
+          cutoff_params:
+            success_altitude_m: 1491.1503
+            fail_altitude_m: 301.5285

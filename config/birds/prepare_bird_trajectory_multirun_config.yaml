@@ -1,0 +1,18 @@
+defaults:
+  - prepare_bird_trajectory_config
+  - _self_
+
+hydra:
+  sweeper:
+    params:
+      +realistic/prepare_bird_trajectories/birds_in_thermals: glob(*)
+  callbacks:
+    merge_observation_logs:
+      _target_: utils.multirun_hydra_statistics_concat_callback.MultirunHydraStatisticsConcatCallback
+      input:
+        filepath: observation_log.csv
+        index_column: 0
+        header: 0
+      output:
+        filename_prefix: merged_observation_log
+        target_dir: ???

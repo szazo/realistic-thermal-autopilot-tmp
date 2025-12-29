@@ -1,0 +1,58 @@
+# @package evaluators.main.env.env.params
+defaults:
+  - override /eval/initial_conditions@_here_: common_initial_conditions
+  - _self_
+
+simulation_box_params:
+  box_size: [7000,7000,2000]
+
+inject_trajectories:
+  field_mapping:
+    agent_name_field: bird_name
+    scene_field: thermal
+    time_s_field: time_s
+  agent_schedule:
+  #   start_time_s: 0.
+  #   spacing_s: 20.
+  trajectory_path: data/bird_comparison/processed/stork_trajectories_as_observation_log/merged_observation_log.csv
+
+cutoff_params:
+  maximum_distance_from_core_m: 900.0
+agent_groups:
+  # there is no teacher, only birds
+  teacher:
+    spawner:
+      pool_size: 0
+      initial_time_offset_s_min_max: [0, 0]
+      parallel_num_min_max: [0, 0]
+      time_between_spawns_min_max_s: [0, 0]
+      must_spawn_if_no_global_agent: false
+    initial_conditions_params:
+      tangent_position_parameters:
+        starting_distance_from_tangent_position_m_normal_mean: 0.
+        starting_distance_from_tangent_position_m_normal_sigma: 0.
+        starting_distance_from_tangent_position_m_normal_sigma_k: 1.
+        tangent_distance_from_core_m_normal_mean: 0.
+        tangent_distance_from_core_m_normal_sigma: 0.
+        tangent_distance_from_core_m_normal_sigma_k: 1.
+      altitude_earth_m_mean: 0.
+      altitude_earth_m_sigma: 0.0
+      altitude_earth_m_sigma_k: 1.
+  student:
+    spawner:
+      pool_size: 1
+      initial_time_offset_s_min_max: [0, 0]
+      parallel_num_min_max: [1, 1]
+      time_between_spawns_min_max_s: [0, 0]
+      must_spawn_if_no_global_agent: true
+    initial_conditions_params:
+      tangent_position_parameters:
+        starting_distance_from_tangent_position_m_normal_mean: ???
+        starting_distance_from_tangent_position_m_normal_sigma: ???
+        starting_distance_from_tangent_position_m_normal_sigma_k: 1.
+        tangent_distance_from_core_m_normal_mean: ???
+        tangent_distance_from_core_m_normal_sigma: ???
+        tangent_distance_from_core_m_normal_sigma_k: 1.
+      altitude_earth_m_mean: ???
+      altitude_earth_m_sigma: 0.0
+      altitude_earth_m_sigma_k: 1.

@@ -1,0 +1,1095 @@
+<?xml version="1.0" standalone="no"?>
+<mlt LC_NUMERIC="C" version="7.33.0" title="Shotcut version 25.08.16" producer="main_bin">
+  <profile description="automatic" width="1920" height="1080" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="50" frame_rate_den="1" colorspace="709"/>
+  <playlist id="main_bin">
+    <property name="xml_retain">1</property>
+  </playlist>
+  <producer id="black" in="00:00:00.000" out="00:01:24.140">
+    <property name="length">00:01:24.160</property>
+    <property name="eof">pause</property>
+    <property name="resource">0</property>
+    <property name="aspect_ratio">1</property>
+    <property name="mlt_service">color</property>
+    <property name="mlt_image_format">rgba</property>
+    <property name="set.test_audio">0</property>
+  </producer>
+  <playlist id="background">
+    <entry producer="black" in="00:00:00.000" out="00:01:24.140"/>
+  </playlist>
+  <chain id="chain0" out="00:00:07.760">
+    <property name="length">00:00:07.780</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video1.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1742142</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="format">3</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:36:54</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">778f522cc998b02f2784a0012f50748a</property>
+    <property name="ignore_points">0</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video1.mp4</property>
+    <property name="xml">was here</property>
+    <property name="meta.shotcut.vui">1</property>
+    <filter id="filter0" out="00:00:07.760">
+      <property name="argument">Training Step 60K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1.0</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+    </filter>
+  </chain>
+  <chain id="chain1" out="00:00:05.440">
+    <property name="length">00:00:05.460</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video2.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">2143337</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:38:30</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">1ef7eb25ac3d3b9774c11f6af3b6219a</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video2.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter1" out="00:00:05.440">
+      <property name="argument">Training Step 120K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor0" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain0" in="00:00:07.480" out="00:00:07.760"/>
+    <track producer="chain1" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition0" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition1" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain2" out="00:00:04.200">
+    <property name="length">00:00:04.220</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video3.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1796276</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:39:24</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">cc6a9481126f82697bcd109e6753bc25</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video3.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter2" out="00:00:04.200">
+      <property name="argument">Training Step 180K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor1" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain1" in="00:00:05.160" out="00:00:05.440"/>
+    <track producer="chain2" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition2" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition3" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain3" out="00:00:10.520">
+    <property name="length">00:00:10.540</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video4.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1919007</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:41:15</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">05ef109fdb67f3fbdfe125234fbcbbff</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video4.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter3" out="00:00:05.260">
+      <property name="argument">Training Step 240K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor2" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain2" in="00:00:03.920" out="00:00:04.200"/>
+    <track producer="chain3" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition4" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition5" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain4" out="00:00:05.820">
+    <property name="length">00:00:05.840</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video5.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1976834</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:42:29</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">1e5fbb0667745faadb3f111ad648a793</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video5.mp4</property>
+    <property name="xml">was here</property>
+    <property name="meta.shotcut.vui">1</property>
+    <filter id="filter4" out="00:00:05.220">
+      <property name="argument">Training Step 300K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor3" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain3" in="00:00:04.980" out="00:00:05.260"/>
+    <track producer="chain4" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition6" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition7" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain5" out="00:00:10.260">
+    <property name="length">00:00:10.280</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video10.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1974942</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:44:48</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">05181a7794e11b3dde3c3a07ec696cf2</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video10.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter5" in="00:00:01.200" out="00:00:05.940">
+      <property name="argument">Training Step 600K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor4" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain4" in="00:00:04.940" out="00:00:05.220"/>
+    <track producer="chain5" in="00:00:01.200" out="00:00:01.480"/>
+    <transition id="transition8" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition9" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain6" out="00:00:20.920">
+    <property name="length">00:00:20.940</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video15.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1915825</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T17:14:19</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">d7fbfce9ccd092e3d26b7582a403a58a</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video15.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter6" out="00:00:12.040">
+      <property name="argument">Training Step 900K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor5" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <property name="meta.shotcut.vui">1</property>
+    <track producer="chain5" in="00:00:05.660" out="00:00:05.940"/>
+    <track producer="chain6" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition10" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition11" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+    <filter id="filter7" out="00:00:00.280">
+      <property name="argument">Training Step 900K</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </tractor>
+  <chain id="chain7" out="00:00:15.100">
+    <property name="length">00:00:15.120</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video20.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">2101947</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:51:42</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">dae09e0ddbff8baa9fcdcb74028a8320</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video20.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter8" out="00:00:06.380">
+      <property name="argument">Training Step 1.2M</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor6" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain6" in="00:00:11.760" out="00:00:12.040"/>
+    <track producer="chain7" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition12" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition13" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain8" out="00:00:07.340">
+    <property name="length">00:00:07.360</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video35.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1874626</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T16:57:31</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">4dc1ffd9061bc770376803c2003d2de5</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video35.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter9" out="00:00:06.700">
+      <property name="argument">Training Step 2.1M</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor7" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain7" in="00:00:06.100" out="00:00:06.380"/>
+    <track producer="chain8" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition14" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition15" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain9" out="00:00:07.720">
+    <property name="length">00:00:07.740</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos/video50.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1766656</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-24T17:01:39</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">ab20980ebf880e66b9e48da2eacda629</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video50.mp4</property>
+    <property name="meta.shotcut.vui">1</property>
+    <property name="xml">was here</property>
+    <filter id="filter10" out="00:00:07.720">
+      <property name="argument">Training Step 3M</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor8" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain8" in="00:00:06.420" out="00:00:06.700"/>
+    <track producer="chain9" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition16" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition17" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <chain id="chain10" out="00:00:23.140">
+    <property name="length">00:00:23.160</property>
+    <property name="eof">pause</property>
+    <property name="resource">/home/szazo/prj/glider/glider_realistic/results/train_videos2/video112.mp4</property>
+    <property name="mlt_service">avformat-novalidate</property>
+    <property name="meta.media.nb_streams">1</property>
+    <property name="meta.media.0.stream.type">video</property>
+    <property name="meta.media.0.stream.frame_rate">50</property>
+    <property name="meta.media.0.stream.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.width">1920</property>
+    <property name="meta.media.0.codec.height">1080</property>
+    <property name="meta.media.0.codec.rotate">0</property>
+    <property name="meta.media.0.codec.pix_fmt">yuv444p</property>
+    <property name="meta.media.0.codec.sample_aspect_ratio">0</property>
+    <property name="meta.media.0.codec.colorspace">709</property>
+    <property name="meta.media.0.codec.name">h264</property>
+    <property name="meta.media.0.codec.long_name">H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10</property>
+    <property name="meta.media.0.codec.bit_rate">1396499</property>
+    <property name="meta.attr.0.stream.handler_name.markup">VideoHandler</property>
+    <property name="meta.attr.0.stream.vendor_id.markup">[0][0][0][0]</property>
+    <property name="meta.attr.0.stream.encoder.markup">Lavc62.11.100 libx264</property>
+    <property name="meta.attr.major_brand.markup">isom</property>
+    <property name="meta.attr.minor_version.markup">512</property>
+    <property name="meta.attr.compatible_brands.markup">isomiso2avc1mp41</property>
+    <property name="meta.attr.encoder.markup">Lavf62.3.100</property>
+    <property name="seekable">1</property>
+    <property name="meta.media.sample_aspect_num">1</property>
+    <property name="meta.media.sample_aspect_den">1</property>
+    <property name="audio_index">-1</property>
+    <property name="video_index">0</property>
+    <property name="creation_time">2025-10-25T11:24:30</property>
+    <property name="vstream">0</property>
+    <property name="meta.media.frame_rate_num">50</property>
+    <property name="meta.media.frame_rate_den">1</property>
+    <property name="meta.media.colorspace">709</property>
+    <property name="meta.media.color_trc">2</property>
+    <property name="meta.media.has_b_frames">2</property>
+    <property name="meta.media.width">1920</property>
+    <property name="meta.media.height">1080</property>
+    <property name="meta.media.aspect_ratio">1</property>
+    <property name="meta.media.color_range">mpeg</property>
+    <property name="shotcut:skipConvert">1</property>
+    <property name="shotcut:hash">8c13d43801cd3fb72f100a9f3689f009</property>
+    <property name="meta.media.top_field_first">0</property>
+    <property name="meta.media.progressive">1</property>
+    <property name="shotcut:caption">video112.mp4</property>
+    <property name="xml">was here</property>
+    <property name="meta.shotcut.vui">1</property>
+    <filter id="filter11" out="00:00:21.480">
+      <property name="argument">Training Step 6.7M</property>
+      <property name="geometry">1192 8 721 68 1</property>
+      <property name="family">Sans</property>
+      <property name="size">1080</property>
+      <property name="weight">400</property>
+      <property name="style">normal</property>
+      <property name="fgcolour">#ffaa0000</property>
+      <property name="bgcolour">#00000000</property>
+      <property name="olcolour">#aa000000</property>
+      <property name="pad">0</property>
+      <property name="halign">right</property>
+      <property name="valign">middle</property>
+      <property name="outline">3</property>
+      <property name="opacity">1</property>
+      <property name="mlt_service">dynamictext</property>
+      <property name="shotcut:filter">dynamicText</property>
+      <property name="shotcut:usePointSize">0</property>
+      <property name="shotcut:animIn">00:00:00.000</property>
+      <property name="shotcut:animOut">00:00:00.000</property>
+      <property name="shotcut:pointSize">0</property>
+    </filter>
+  </chain>
+  <tractor id="tractor9" in="00:00:00.000" out="00:00:00.280">
+    <property name="shotcut:transition">lumaMix</property>
+    <track producer="chain9" in="00:00:07.440" out="00:00:07.720"/>
+    <track producer="chain10" in="00:00:00.000" out="00:00:00.280"/>
+    <transition id="transition18" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="factory">loader</property>
+      <property name="mlt_service">luma</property>
+      <property name="alpha_over">1</property>
+      <property name="fix_background_alpha">1</property>
+    </transition>
+    <transition id="transition19" out="00:00:00.280">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="start">-1</property>
+      <property name="accepts_blanks">1</property>
+    </transition>
+  </tractor>
+  <playlist id="playlist0">
+    <property name="shotcut:video">1</property>
+    <property name="shotcut:name">V1</property>
+    <entry producer="chain0" in="00:00:00.000" out="00:00:07.460"/>
+    <entry producer="tractor0" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain1" in="00:00:00.300" out="00:00:05.140"/>
+    <entry producer="tractor1" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain2" in="00:00:00.300" out="00:00:03.900"/>
+    <entry producer="tractor2" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain3" in="00:00:00.300" out="00:00:04.960"/>
+    <entry producer="tractor3" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain4" in="00:00:00.300" out="00:00:04.920"/>
+    <entry producer="tractor4" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain5" in="00:00:01.500" out="00:00:05.640"/>
+    <entry producer="tractor5" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain6" in="00:00:00.300" out="00:00:11.740"/>
+    <entry producer="tractor6" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain7" in="00:00:00.300" out="00:00:06.080"/>
+    <entry producer="tractor7" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain8" in="00:00:00.300" out="00:00:06.400"/>
+    <entry producer="tractor8" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain9" in="00:00:00.300" out="00:00:07.420"/>
+    <entry producer="tractor9" in="00:00:00.000" out="00:00:00.280"/>
+    <entry producer="chain10" in="00:00:00.300" out="00:00:21.480"/>
+  </playlist>
+  <playlist id="playlist1">
+    <property name="shotcut:video">1</property>
+    <property name="shotcut:name">V2</property>
+    <blank length="00:00:00.020"/>
+  </playlist>
+  <tractor id="tractor10" title="Shotcut version 25.08.16" in="00:00:00.000" out="00:01:24.140">
+    <property name="shotcut">1</property>
+    <property name="shotcut:projectAudioChannels">2</property>
+    <property name="shotcut:projectFolder">1</property>
+    <property name="shotcut:trackHeight">39</property>
+    <property name="shotcut:scaleFactor">1.40554</property>
+    <property name="shotcut:skipConvert">0</property>
+    <track producer="background"/>
+    <track producer="playlist0"/>
+    <track producer="playlist1"/>
+    <transition id="transition20">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="mlt_service">mix</property>
+      <property name="always_active">1</property>
+      <property name="sum">1</property>
+    </transition>
+    <transition id="transition21">
+      <property name="a_track">0</property>
+      <property name="b_track">1</property>
+      <property name="version">0.1</property>
+      <property name="mlt_service">frei0r.cairoblend</property>
+      <property name="threads">0</property>
+      <property name="disable">1</property>
+    </transition>
+    <transition id="transition22">
+      <property name="a_track">0</property>
+      <property name="b_track">2</property>
+      <property name="mlt_service">mix</property>
+      <property name="always_active">1</property>
+      <property name="sum">1</property>
+    </transition>
+    <transition id="transition23">
+      <property name="a_track">1</property>
+      <property name="b_track">2</property>
+      <property name="version">0.1</property>
+      <property name="mlt_service">frei0r.cairoblend</property>
+      <property name="threads">0</property>
+      <property name="disable">0</property>
+    </transition>
+  </tractor>
+</mlt>

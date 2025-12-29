@@ -1,0 +1,67 @@
+train:
+  single_agent:
+    thermal:
+      train: bird_single_agent_train_thermal
+      test: bird_single_agent_test_thermal
+    glider:
+      train: bird_glider_wing_loading_7
+      test: bird_glider_wing_loading_7
+    timing:
+      dt_s: 0.4
+      decision_dt_s: 0.8
+    seq_length: 50
+    initial:
+      starting_distance_from_tangent_position_m_normal_mean: 150.
+      starting_distance_from_tangent_position_m_normal_sigma: 0.
+      tangent_distance_from_core_m_normal_mean: 50.
+      tangent_distance_from_core_m_normal_sigma: 0.
+  multi_agent:
+    thermal:
+      train: multi_agent_thermal_wind
+      test: multi_agent_thermal_wind
+    glider:
+      train: bird_glider_wing_loading_7
+      test: bird_glider_wing_loading_7
+    timing:
+      dt_s: 0.4
+      decision_dt_s: 0.8
+    seq_length: 50
+    agent_seq_length: 5
+    peer_policy:
+      neptune_id: GLID-4517
+      
+eval:
+  policy:
+    neptune_id: GLID-4924
+    checkpoint_name: weights108
+    seq_length: 50
+    agent_seq_length: 5
+  from_different_distances:
+    r_distances: 5 50 75 100 150 250 400 600
+    episode_count: 100
+    student_alone:
+      glob: '*'
+    student_with_birds:
+      glob: '*'
+  from_close_distance:
+    episode_count: 10
+    n_bootstrap: 1000
+    student_alone:
+      glob: '*'
+    student_with_birds:
+      glob: '*'
+thermal_trajectory_plots:
+  - thermal: b010
+    episode: 0
+    bird_name: Bubbel
+    setup: student_alone
+thermal_plots:
+  realistic:
+    spacing_m: 4
+    thermals:
+      - b010
+      - b0230
+      - b072
+      - b077
+      - b112
+      - b121

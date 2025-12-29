@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+  - ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+  - /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b077_extrapolated
+  - _self_
+experiment_name: multi_agent_policy_b077
+evaluators:
+  main:
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b077
+          cutoff_params:
+            success_altitude_m: 1538.5881
+            fail_altitude_m: 743.3921
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 1345.
+    observation_logger:
+      additional_columns:
+        thermal: b077
+        bird_name: bird_train_glider

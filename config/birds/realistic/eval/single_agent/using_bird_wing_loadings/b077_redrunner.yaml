@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_single_agent_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: redrunner
+- override /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b077_extrapolated
+experiment_name: b077_redrunner
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b077
+        bird_name: Redrunner
+    env:
+      env:
+        params:
+          initial_conditions_params:
+            altitude_earth_m_mean: 1036.1557
+          cutoff_params:
+            success_altitude_m: 1594.3491
+            fail_altitude_m: 736.1557

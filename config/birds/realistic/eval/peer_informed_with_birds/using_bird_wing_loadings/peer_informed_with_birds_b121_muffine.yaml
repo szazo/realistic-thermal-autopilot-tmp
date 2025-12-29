@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: muffine
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b121_extrapolated
+experiment_name: peer_informed_with_birds_b121_muffine
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b121
+        bird_name: Muffine
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b121
+          cutoff_params:
+            success_altitude_m: 1689.0247
+            fail_altitude_m: 1051.5522
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 1351.5522

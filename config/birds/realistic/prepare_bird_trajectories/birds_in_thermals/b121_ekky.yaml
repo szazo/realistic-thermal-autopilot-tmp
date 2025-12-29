@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- 'override /env/glider/air_velocity_field@job.air_velocity_field:': stacked_decomposed_realistic/b121_extrapolated
+- _self_
+job:
+  params:
+    trajectory_path: data/bird_comparison/processed/stork_trajectories/b121_0.1/data.csv
+    additional_columns:
+      thermal: b121
+      bird_name: Ekky
+      mass_kg: 3.26
+      wing_area_m2: 0.46188676208453744
+      CL: 1.5
+      CD: 0.09
+      original_thermal_z_min: 1339.6977
+      original_thermal_z_max: 1674.746
+    trajectory_converter:
+      shift_time_s: 0.0
+      filters:
+        bird_name: Ekky

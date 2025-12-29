@@ -1,0 +1,45 @@
+# @package _global_
+defaults:
+  - /play_observation_log_config
+  - _self_
+
+job:
+  scene:
+    hide_button_on_start: true
+    annotation:
+      speed: false
+      scene: false
+      episode: false
+      time: true
+    
+    camera_animation:
+      smooth: true
+      keyframes:
+        - time_s: 0.
+          camera:
+            pos: [-221.661, -645.531, 1083.31]
+            focal_point: [-228.505, -62.3094, 828.682]
+            viewup: [-5.56867e-3, 0.400063, 0.916471]
+            clipping_range: [4.34036, 4340.36]
+        - time_s: 50.
+          camera:
+            pos: [-261.558, -333.122, 1132.69]
+            focal_point: [-89.2983, -41.3907, 1013.22]
+            viewup: [0.251865, 0.235680, 0.938626]
+            clipping_range: [4.90366, 4903.66]
+        - time_s: 100.
+          camera:
+            pos: [-210.340, -213.698, 1126.67]
+            focal_point: [-41.7851, -60.4049, 1035.52]
+            viewup: [0.344600, 0.170027, 0.923224]
+            clipping_range: [4.84924, 4849.24]
+        - time_s: 320.
+          camera:
+            pos: [-154.151, 358.544, 1626.74]
+            focal_point: [61.0743, 371.320, 1509.57]
+            viewup: [0.478700, -0.0133946, 0.877877]
+            clipping_range: [4.14242, 4142.42]
+
+hydra:
+  searchpath:
+    - pkg://config/birds

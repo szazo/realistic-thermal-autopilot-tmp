@@ -1,0 +1,20 @@
+# @package _global_
+defaults:
+- 'override /env/glider/air_velocity_field@job.air_velocity_field:': stacked_decomposed_realistic/b112_extrapolated
+- _self_
+job:
+  params:
+    trajectory_path: data/bird_comparison/processed/stork_trajectories/b112_0.2/data.csv
+    additional_columns:
+      thermal: b112
+      bird_name: Frank
+      mass_kg: 3.43
+      wing_area_m2: 0.4886330142403046
+      CL: 1.5
+      CD: 0.09
+      original_thermal_z_min: 1392.4218
+      original_thermal_z_max: 1552.0395
+    trajectory_converter:
+      shift_time_s: 0.0
+      filters:
+        bird_name: Frank

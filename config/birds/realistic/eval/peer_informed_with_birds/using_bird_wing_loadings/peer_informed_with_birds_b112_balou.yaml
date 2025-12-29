@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- ../initial_conditions@evaluators.main.env.env.params: realistic_peer_informed_with_birds_initial_conditions
+- /realistic/eval/env/aerodynamics@evaluators.main.env.env.aerodynamics: balou
+- /env/glider/air_velocity_field@evaluators.main.env.env.air_velocity_field: stacked_decomposed_realistic/b112_extrapolated
+experiment_name: peer_informed_with_birds_b112_balou
+evaluators:
+  main:
+    observation_logger:
+      additional_columns:
+        thermal: b112
+        bird_name: Balou
+    env:
+      env:
+        params:
+          inject_trajectories:
+            filters:
+              thermal: b112
+          cutoff_params:
+            success_altitude_m: 1553.5609
+            fail_altitude_m: 1040.6888
+          agent_groups:
+            student:
+              initial_conditions_params:
+                altitude_earth_m_mean: 1340.6888

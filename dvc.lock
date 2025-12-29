@@ -1,0 +1,1866 @@
+schema: '2.0'
+stages:
+  download_bird_data:
+    cmd: python rl/bird_comparison/scripts/download_data.py 
+      $BIRD_DATA_DOWNLOAD_PASSWORD
+    deps:
+    - path: rl/bird_comparison/scripts/download_data.py
+      hash: md5
+      md5: c360efebfc01d323eaa2256bf5d50a99
+      size: 1839
+    outs:
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    - path: data/bird_comparison/input_stork_data
+      hash: md5
+      md5: 4517a7cc76a5d99ce34b2453f5d4b7db.dir
+      size: 1102557
+      nfiles: 7
+    - path: data/bird_comparison/stork_meta
+      hash: md5
+      md5: 629729550944ad2993c07f46cd91b32b.dir
+      size: 2294
+      nfiles: 1
+    - path: data/bird_comparison/wing_loading_stork
+      hash: md5
+      md5: b92f0b69b06ef483293cd17503f0a3e4.dir
+      size: 1132
+      nfiles: 1
+  preprocess_bird_data:
+    cmd: python rl/bird_comparison/scripts/include_bank_angle.py
+    deps:
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    - path: data/bird_comparison/input_stork_data
+      hash: md5
+      md5: 4517a7cc76a5d99ce34b2453f5d4b7db.dir
+      size: 1102557
+      nfiles: 7
+    outs:
+    - path: data/bird_comparison/processed/stork_trajectories
+      hash: md5
+      md5: dee5d2ff20db1a630aeb16ad290d9ba5.dir
+      size: 2837231
+      nfiles: 7
+  prepare_bird_trajectories:
+    cmd: task realistic:prepare-bird-trajectories GLOB="*" 
+      LAUNCHER=slurm_atlasz_1G
+    deps:
+    - path: config/birds/realistic/prepare_bird_trajectories/birds_in_thermals
+      hash: md5
+      md5: dcbd581959193d828bc6c4d019e0dac3.dir
+      size: 65048
+      nfiles: 111
+    - path: data/bird_comparison/processed/stork_trajectories
+      hash: md5
+      md5: dee5d2ff20db1a630aeb16ad290d9ba5.dir
+      size: 2837231
+      nfiles: 7
+    outs:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+  generate_bird_experiment_configs:
+    cmd: python rl/bird_comparison/scripts/generate_bird_experiment_configs.py
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories
+      hash: md5
+      md5: dee5d2ff20db1a630aeb16ad290d9ba5.dir
+      size: 2837231
+      nfiles: 7
+    - path: data/bird_comparison/wing_loading_stork/wing_loadings.csv
+      hash: md5
+      md5: 578da2221440c0bf0cf259256a95b3f5
+      size: 1132
+    outs:
+    - path: config/birds/realistic/eval/env/aerodynamics
+      hash: md5
+      md5: ee1293c49fd9a8fd735fa5493b07a707.dir
+      size: 2668
+      nfiles: 24
+    - path: 
+        config/birds/realistic/eval/peer_informed_with_birds/using_bird_wing_loadings
+      hash: md5
+      md5: 10d480fdb8e3ac99ba0c418da3f401b4.dir
+      size: 96902
+      nfiles: 111
+    - path: config/birds/realistic/eval/single_agent/using_bird_wing_loadings
+      hash: md5
+      md5: 50a790ea86b847f9f57487ba26d55275.dir
+      size: 79403
+      nfiles: 111
+    - path: config/birds/realistic/prepare_bird_trajectories/birds_in_thermals
+      hash: md5
+      md5: dcbd581959193d828bc6c4d019e0dac3.dir
+      size: 65048
+      nfiles: 111
+  eval-peer-informed-student-alone-from-different-distances:
+    cmd: task 
+      realistic:eval-peer-informed-student-alone-from-different-distances 
+      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
+      SEQ_LENGTH=50 EPISODE_COUNT=100 GLOB="*"
+    params:
+      params.yaml:
+        eval.from_different_distances.student_alone:
+          glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/GLID-4924/100_episodes
+      hash: md5
+      md5: 5184f3907f5c9da1ad3257c4452ce848.dir
+      size: 7079462892
+      nfiles: 8
+  eval-peer-informed-student-with-birds-from-different-distances:
+    cmd: task 
+      realistic:eval-peer-informed-student-with-birds-from-different-distances 
+      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
+      SEQ_LENGTH=50 AGENT_SEQ_LENGTH=5 EPISODE_COUNT=100 GLOB="*"
+    params:
+      params.yaml:
+        eval.from_different_distances.student_with_birds:
+          glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes
+      hash: md5
+      md5: d5254675c8fcbffb4fa6689b4d6cc8e2.dir
+      size: 8306246376
+      nfiles: 8
+  generate_altitude_achievement_percent_by_distance_analysis:
+    cmd: python -m 
+      bird_comparison.analysis.different_distances_train_wing_loading.generate_altitude_achievement_percent_by_distance_analysis
+      --policy-neptune-run-id GLID-4924 --episode-count 100 --r-distances 5 50 
+      75 100 150 250 400 600
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/GLID-4924/100_episodes
+      hash: md5
+      md5: 5184f3907f5c9da1ad3257c4452ce848.dir
+      size: 7079462892
+      nfiles: 8
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes
+      hash: md5
+      md5: d5254675c8fcbffb4fa6689b4d6cc8e2.dir
+      size: 8306246376
+      nfiles: 8
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: c86172d58ae9e06955770e9b7c79be6f.dir
+      size: 9500
+      nfiles: 4
+    - path: 
+        rl/bird_comparison/analysis/different_distances_train_wing_loading/generate_altitude_achievement_percent_by_distance_analysis.py
+      hash: md5
+      md5: fe034c540c5b017d2dafc2159cd0c3b4
+      size: 26521
+    params:
+      params.yaml:
+        eval.from_different_distances:
+          r_distances: 5 50 75 100 150 250 400 600
+          episode_count: 100
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/analysis/from_different_distances_using_train_glider/altitude_achievement_percent
+      hash: md5
+      md5: e522cd1493fc8298db151735252d14ce.dir
+      size: 560148
+      nfiles: 15
+  'eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance:':
+    cmd: task 
+      realistic:eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance
+      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
+      SEQ_LENGTH=50 EPISODE_COUNT=10 GLOB="*"
+    params:
+      params.yaml:
+        eval.from_close_distance.student_alone:
+          glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+  eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance:
+    cmd: task 
+      realistic:eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance
+      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
+      SEQ_LENGTH=50 AGENT_SEQ_LENGTH=5 EPISODE_COUNT=10 GLOB="*"
+    params:
+      params.yaml:
+        eval.from_close_distance.student_with_birds:
+          glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+  generate_close_distance_vertical_velocity_analysis:
+    cmd: python -m 
+      bird_comparison.analysis.close_distance_bird_wing_loadings.generate_vertical_velocity_analysis
+      --policy-neptune-run-id GLID-4924 --episode-count 10 --n_bootstrap 1000
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_vertical_velocity_analysis.py
+      hash: md5
+      md5: 2fd1f1d33297cc41813a1b47c27d357f
+      size: 24598
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: c86172d58ae9e06955770e9b7c79be6f.dir
+      size: 9500
+      nfiles: 4
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/vertical_velocity
+      hash: md5
+      md5: a4f967d0cc816c6bf3cee207150df6ee.dir
+      size: 1531820077
+      nfiles: 31
+  generate_different_distances_wind_speed_analysis:
+    cmd: python -m 
+      bird_comparison.analysis.different_distances_train_wing_loading.generate_wind_speed_analysis
+      --policy-neptune-run-id GLID-4924 --episode-count 100 --r-distances 5 50 
+      75 100 150 250 400 600
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/GLID-4924/100_episodes
+      hash: md5
+      md5: 5184f3907f5c9da1ad3257c4452ce848.dir
+      size: 7079462892
+      nfiles: 8
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes
+      hash: md5
+      md5: d5254675c8fcbffb4fa6689b4d6cc8e2.dir
+      size: 8306246376
+      nfiles: 8
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: c86172d58ae9e06955770e9b7c79be6f.dir
+      size: 9500
+      nfiles: 4
+    - path: 
+        rl/bird_comparison/analysis/different_distances_train_wing_loading/generate_wind_speed_analysis.py
+      hash: md5
+      md5: bddea659cf732f5fc0556399ee0d4e05
+      size: 18885
+    params:
+      params.yaml:
+        eval.from_different_distances:
+          r_distances: 5 50 75 100 150 250 400 600
+          episode_count: 100
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/analysis/from_different_distances_using_train_glider/wind_speed
+      hash: md5
+      md5: 1874d570609375fdc7fb57ec5824aaf2.dir
+      size: 1691562
+      nfiles: 16
+  generate_close_distance_episode_success_analysis:
+    cmd: python -m 
+      bird_comparison.analysis.close_distance_bird_wing_loadings.generate_episode_success_analysis
+      --policy-neptune-run-id GLID-4924 --episode-count 10
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_episode_success_analysis.py
+      hash: md5
+      md5: 7706df4a0d0216d66a77e6b1cb89d1fa
+      size: 7346
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: c86172d58ae9e06955770e9b7c79be6f.dir
+      size: 9500
+      nfiles: 4
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/episode_success
+      hash: md5
+      md5: d64aba1edb61dff32f1d715148cb583c.dir
+      size: 425113
+      nfiles: 16
+  generate_realistic_thermal_plots@b010:
+    cmd: task plot_realistic_thermals GLOB="b010" SPACING_M=4 $EXTRA
+    deps:
+    - path: config/birds/thermal_plots/b010.yaml
+      hash: md5
+      md5: ac12bc718d29c454fab59fa989fa171e
+      size: 553
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    params:
+      params.yaml:
+        thermal_plots.realistic:
+          spacing_m: 4
+          thermals:
+          - b010
+          - b0230
+          - b072
+          - b077
+          - b112
+          - b121
+    outs:
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b010
+      hash: md5
+      md5: 3f27b67b73d469420b3e7275e01df62b.dir
+      size: 618234048
+      nfiles: 3
+  generate_realistic_thermal_plots@b0230:
+    cmd: task plot_realistic_thermals GLOB="b0230" SPACING_M=4 $EXTRA
+    deps:
+    - path: config/birds/thermal_plots/b0230.yaml
+      hash: md5
+      md5: e249fe6998491716b435cc89ececc33f
+      size: 553
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    params:
+      params.yaml:
+        thermal_plots.realistic:
+          spacing_m: 4
+          thermals:
+          - b010
+          - b0230
+          - b072
+          - b077
+          - b112
+          - b121
+    outs:
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b0230
+      hash: md5
+      md5: f201d7c6fceadfcc7e8f79450127c126.dir
+      size: 206832831
+      nfiles: 3
+  generate_realistic_thermal_plots@b072:
+    cmd: task plot_realistic_thermals GLOB="b072" SPACING_M=4 $EXTRA
+    deps:
+    - path: config/birds/thermal_plots/b072.yaml
+      hash: md5
+      md5: 26ccb14bba7ef347b60905b6b9e017e2
+      size: 549
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    params:
+      params.yaml:
+        thermal_plots.realistic:
+          spacing_m: 4
+          thermals:
+          - b010
+          - b0230
+          - b072
+          - b077
+          - b112
+          - b121
+    outs:
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b072
+      hash: md5
+      md5: e4609f90cd03a664e6bfe2275abe6960.dir
+      size: 276182887
+      nfiles: 3
+  generate_realistic_thermal_plots@b077:
+    cmd: task plot_realistic_thermals GLOB="b077" SPACING_M=4 $EXTRA
+    deps:
+    - path: config/birds/thermal_plots/b077.yaml
+      hash: md5
+      md5: a2e099d02b4ce32e84c84a4c8a618778
+      size: 550
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    params:
+      params.yaml:
+        thermal_plots.realistic:
+          spacing_m: 4
+          thermals:
+          - b010
+          - b0230
+          - b072
+          - b077
+          - b112
+          - b121
+    outs:
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b077
+      hash: md5
+      md5: 36633296644f8f2cbae40c5c7dd38758.dir
+      size: 35372062
+      nfiles: 3
+  generate_realistic_thermal_plots@b112:
+    cmd: task plot_realistic_thermals GLOB="b112" SPACING_M=4 $EXTRA
+    deps:
+    - path: config/birds/thermal_plots/b112.yaml
+      hash: md5
+      md5: 62470c7d47319e3910fc8c5611cc5fc5
+      size: 552
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    params:
+      params.yaml:
+        thermal_plots.realistic:
+          spacing_m: 4
+          thermals:
+          - b010
+          - b0230
+          - b072
+          - b077
+          - b112
+          - b121
+    outs:
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b112
+      hash: md5
+      md5: 1e9ae94243820b42c40248e7967bed95.dir
+      size: 224581617
+      nfiles: 3
+  generate_realistic_thermal_plots@b121:
+    cmd: task plot_realistic_thermals GLOB="b121" SPACING_M=4 $EXTRA
+    deps:
+    - path: config/birds/thermal_plots/b121.yaml
+      hash: md5
+      md5: f82459bf8c3207fe94781c68acbab6b5
+      size: 551
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    params:
+      params.yaml:
+        thermal_plots.realistic:
+          spacing_m: 4
+          thermals:
+          - b010
+          - b0230
+          - b072
+          - b077
+          - b112
+          - b121
+    outs:
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b121
+      hash: md5
+      md5: 20c7483f870de1cef9252ec2b7c4acd2.dir
+      size: 411325750
+      nfiles: 3
+  generate_realistic_thermal_trajectory_plots@b121:
+    cmd: 'echo b121 # python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      # --policy-neptune-run-id GLID-4924 # --episode-count 10'
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: cd11f17dc195783060cb9f848427e7bb
+      size: 8819
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: 03607da9119304039ac3526191f029a1.dir
+      size: 215123
+      nfiles: 11
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+  generate_realistic_thermal_trajectory_plots@b072:
+    cmd: 'echo b072 # python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      # --policy-neptune-run-id GLID-4924 # --episode-count 10'
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: cd11f17dc195783060cb9f848427e7bb
+      size: 8819
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: 03607da9119304039ac3526191f029a1.dir
+      size: 215123
+      nfiles: 11
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+  generate_realistic_thermal_trajectory_plots@b010:
+    cmd: 'echo b010 # python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      # --policy-neptune-run-id GLID-4924 # --episode-count 10'
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: cd11f17dc195783060cb9f848427e7bb
+      size: 8819
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: 03607da9119304039ac3526191f029a1.dir
+      size: 215123
+      nfiles: 11
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+  generate_realistic_thermal_trajectory_plots@b112:
+    cmd: 'echo b112 # python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      # --policy-neptune-run-id GLID-4924 # --episode-count 10'
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: cd11f17dc195783060cb9f848427e7bb
+      size: 8819
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: 03607da9119304039ac3526191f029a1.dir
+      size: 215123
+      nfiles: 11
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+  generate_realistic_thermal_trajectory_plots@b077:
+    cmd: 'echo b077 # python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      # --policy-neptune-run-id GLID-4924 # --episode-count 10'
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: cd11f17dc195783060cb9f848427e7bb
+      size: 8819
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: 03607da9119304039ac3526191f029a1.dir
+      size: 215123
+      nfiles: 11
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+  generate_realistic_thermal_trajectory_plots@b0230:
+    cmd: 'echo b0230 # python -m bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      # --policy-neptune-run-id GLID-4924 # --episode-count 10'
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: cd11f17dc195783060cb9f848427e7bb
+      size: 8819
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: 03607da9119304039ac3526191f029a1.dir
+      size: 215123
+      nfiles: 11
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+  generate_realistic_thermal_trajectory_plots@0:
+    cmd: python -m 
+      bird_comparison.analysis.close_distance_bird_wing_loadings.generate_thermal_trajectory_plot
+      --datasource.policy-neptune-run-id GLID-4924 --datasource.episode-count 10
+      --plot.thermal b010 --plot.episode 0 --plot.bird_name Bubbel --plot.setup 
+      student_alone
+    deps:
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b010
+      hash: md5
+      md5: 3f27b67b73d469420b3e7275e01df62b.dir
+      size: 618234048
+      nfiles: 3
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
+      hash: md5
+      md5: f13af99223a17e2c9e9d8529d9b65739
+      size: 9259
+    - path: rl/bird_comparison/analysis/common
+      hash: md5
+      md5: c86172d58ae9e06955770e9b7c79be6f.dir
+      size: 9500
+      nfiles: 4
+    - path: rl/thermal/visualization
+      hash: md5
+      md5: 7e1672660cdf5deedf51915902f13d59.dir
+      size: 26002
+      nfiles: 3
+    params:
+      params.yaml:
+        eval.from_close_distance:
+          episode_count: 10
+          n_bootstrap: 1000
+          student_alone:
+            glob: '*'
+          student_with_birds:
+            glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.png
+      hash: md5
+      md5: 5fbd4367b9399e4d3571e3aee531c09a
+      size: 315270
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.svg
+      hash: md5
+      md5: 8eab82c32cb7b7529d61f5042479e5f7
+      size: 16904167
+  train_single_agent:
+    cmd: task train-single-agent SEQ_LENGTH=50 DT_S=0.4 DECISION_DT_S=0.8 
+      STARTING_DISTANCE_M=150.0 STARTING_DISTANCE_SIGMA_M=0.0 
+      TANGENT_DISTANCE_M=50.0 TANGENT_DISTANCE_SIGMA_M=0.0 
+      TRAIN_THERMAL=bird_single_agent_train_thermal 
+      TEST_THERMAL=bird_single_agent_test_thermal 
+      TRAIN_GLIDER=bird_glider_wing_loading_7 
+      TEST_GLIDER=bird_glider_wing_loading_7
+    deps:
+    - path: config/birds/bird_train_config.yaml
+      hash: md5
+      md5: 4f901b070d0105ee6c956135d3c25097
+      size: 7629
+    params:
+      params.yaml:
+        train.single_agent:
+          thermal:
+            train: bird_single_agent_train_thermal
+            test: bird_single_agent_test_thermal
+          glider:
+            train: bird_glider_wing_loading_7
+            test: bird_glider_wing_loading_7
+          timing:
+            dt_s: 0.4
+            decision_dt_s: 0.8
+          seq_length: 50
+          initial:
+            starting_distance_from_tangent_position_m_normal_mean: 150.0
+            starting_distance_from_tangent_position_m_normal_sigma: 0.0
+            tangent_distance_from_core_m_normal_mean: 50.0
+            tangent_distance_from_core_m_normal_sigma: 0.0
+  generate_glider_with_birds_in_realistic_thermal_video:
+    cmd: task play-realistic-observation-log 
+      OBS_LOG_FILEPATH=data/bird_comparison/processed/video/video.csv SCENE=0 
+      EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=5 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=b010 
+      VIDEO_PATH=results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+      VIDEO_FRAME_STEP_S=0.1 VIDEO_FPS=30 CONFIG_DIR=config/birds/videos 
+      CONFIG_NAME=realistic_with_birds
+    deps:
+    - path: data/bird_comparison/processed/video/video.csv
+      hash: md5
+      md5: a33c6ffa72971b24ee0166006f393a52
+      size: 2108158
+    outs:
+    - path: 
+        results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+      hash: md5
+      md5: 8b727bc49e547448867ab24143b1bc7b
+      size: 106320170
+  encode_glider_with_birds_in_realistic_thermal_video:
+    cmd: ffmpeg -i 
+      results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4 
+      -c:v libx264 -pix_fmt yuv420p -crf 5 -profile:v high -preset veryslow -c:a
+      copy -y 
+      results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
+    deps:
+    - path: 
+        results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+      hash: md5
+      md5: 8b727bc49e547448867ab24143b1bc7b
+      size: 106320170
+    outs:
+    - path: 
+        results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
+      hash: md5
+      md5: 1d9b6f4e93d577129148776523668704
+      size: 225173797
+  single_agent_eval_for_training_video_160m@1:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights1 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch1 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
+      hash: md5
+      md5: 40813d8b15ef08059a57e232df00822b
+      size: 2575720
+  single_agent_eval_for_training_video_160m@2:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights2 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch2 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
+      hash: md5
+      md5: 1fd0128453b627b2cce1f5d1812c44a5
+      size: 1849944
+  single_agent_eval_for_training_video_160m@3:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights3 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch3 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
+      hash: md5
+      md5: 26c4872158ed36bcf96e1e1c4a2693d0
+      size: 2354977
+  single_agent_eval_for_training_video_160m@4:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights4 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch4 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
+      hash: md5
+      md5: 125e45e6c3b67c23a54137c038fc7a0d
+      size: 2541733
+  single_agent_eval_for_training_video_160m@5:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights5 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch5 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
+      hash: md5
+      md5: 2a6d5744835a73fdd6e86bc9894e342c
+      size: 1910210
+  single_agent_eval_for_training_video_160m@10:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights10 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch10 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
+      hash: md5
+      md5: 81db605e9db1c5b1e8fbc8be4b5c8685
+      size: 11249606
+  single_agent_eval_for_training_video_160m@15:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights15 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch15 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
+      hash: md5
+      md5: 3bb995cd46ca40ff0f69fb1b7ff1f573
+      size: 7629512
+  single_agent_eval_for_training_video_160m@20:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights20 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch20 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
+      hash: md5
+      md5: faf99551b1c6ac756bb8b20a66fe2cf1
+      size: 7767548
+  single_agent_eval_for_training_video_160m@25:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights25 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch25 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
+      hash: md5
+      md5: f8f7d3179a84bb338918e2302aa0594f
+      size: 7531387
+  single_agent_eval_for_training_video_160m@30:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights30 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch30 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
+      hash: md5
+      md5: 9d0dd48e39752d1bbe5540b397b3ed6d
+      size: 6475016
+  single_agent_eval_for_training_video_160m@35:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights35 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch35 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
+      hash: md5
+      md5: 8c8dbd4601741998f8f7f78e53eeed8c
+      size: 6166288
+  single_agent_eval_for_training_video_160m@40:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights40 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch40 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
+      hash: md5
+      md5: 073c53c46ea8ec917c042c62a9f91cc6
+      size: 6595872
+  single_agent_eval_for_training_video_160m@50:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights50 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch50 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
+      hash: md5
+      md5: 35069098d84b5819790314d0b8e3dde5
+      size: 6757163
+  single_agent_eval_for_training_video_160m@75:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights75 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch75 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
+      hash: md5
+      md5: 84dd32bcc93211ce02f3c7c7f00af0f4
+      size: 6529908
+  single_agent_eval_for_training_video_160m@100:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights100 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch100 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
+      hash: md5
+      md5: 2c33ffc3638220a37c2ea5317d4c37c6
+      size: 6550172
+  single_agent_eval_for_training_video_160m@112:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights112 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
+      OUTPUT_FILENAME=epoch112 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
+      hash: md5
+      md5: 1954db368867bd41771335e52890f9af
+      size: 6587349
+  generate_single_agent_training_video_160m@1:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video1.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
+      hash: md5
+      md5: 40813d8b15ef08059a57e232df00822b
+      size: 2575720
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video1.mp4
+      hash: md5
+      md5: 778f522cc998b02f2784a0012f50748a
+      size: 1699741
+  generate_single_agent_training_video_160m@2:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video2.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
+      hash: md5
+      md5: 1fd0128453b627b2cce1f5d1812c44a5
+      size: 1849944
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video2.mp4
+      hash: md5
+      md5: 1ef7eb25ac3d3b9774c11f6af3b6219a
+      size: 1466959
+  generate_single_agent_training_video_160m@3:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video3.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
+      hash: md5
+      md5: 26c4872158ed36bcf96e1e1c4a2693d0
+      size: 2354977
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video3.mp4
+      hash: md5
+      md5: 5cd00bf4d90c36e460c91ecad8422f5c
+      size: 441867
+  generate_single_agent_training_video_160m@4:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video4.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
+      hash: md5
+      md5: 125e45e6c3b67c23a54137c038fc7a0d
+      size: 2541733
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video4.mp4
+      hash: md5
+      md5: 5ca5016d6f5933514f438d14777d714e
+      size: 2535500
+  generate_single_agent_training_video_160m@5:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video5.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
+      hash: md5
+      md5: 2a6d5744835a73fdd6e86bc9894e342c
+      size: 1910210
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video5.mp4
+      hash: md5
+      md5: 92d7c77c8fd3661ba500c16657626ae7
+      size: 496934
+  generate_single_agent_training_video_160m@10:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video10.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
+      hash: md5
+      md5: 81db605e9db1c5b1e8fbc8be4b5c8685
+      size: 11249606
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video10.mp4
+      hash: md5
+      md5: 681db74af77a62f93f842879f4950706
+      size: 2544852
+  generate_single_agent_training_video_160m@15:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video15.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
+      hash: md5
+      md5: 3bb995cd46ca40ff0f69fb1b7ff1f573
+      size: 7629512
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video15.mp4
+      hash: md5
+      md5: 332c02b9da75286bff88c0406de7b5c4
+      size: 5028144
+  generate_single_agent_training_video_160m@20:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video20.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
+      hash: md5
+      md5: faf99551b1c6ac756bb8b20a66fe2cf1
+      size: 7767548
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video20.mp4
+      hash: md5
+      md5: 75a7566dec04f36e0aae5e0553a065e9
+      size: 3982632
+  generate_single_agent_training_video_160m@25:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video25.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
+      hash: md5
+      md5: f8f7d3179a84bb338918e2302aa0594f
+      size: 7531387
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video25.mp4
+      hash: md5
+      md5: e2a0d79c1c4e6e3595a172ed37ebdc2c
+      size: 1713674
+  generate_single_agent_training_video_160m@30:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video30.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
+      hash: md5
+      md5: 9d0dd48e39752d1bbe5540b397b3ed6d
+      size: 6475016
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video30.mp4
+      hash: md5
+      md5: 4e3caa9151df5c56800a118c21d5b624
+      size: 1663832
+  generate_single_agent_training_video_160m@35:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video35.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
+      hash: md5
+      md5: 8c8dbd4601741998f8f7f78e53eeed8c
+      size: 6166288
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video35.mp4
+      hash: md5
+      md5: 4dc1ffd9061bc770376803c2003d2de5
+      size: 1729943
+  generate_single_agent_training_video_160m@40:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video40.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
+      hash: md5
+      md5: 073c53c46ea8ec917c042c62a9f91cc6
+      size: 6595872
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video40.mp4
+      hash: md5
+      md5: cacb237ba4f98c4eeb1434c990190f01
+      size: 1602532
+  generate_single_agent_training_video_160m@50:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video50.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
+      hash: md5
+      md5: 35069098d84b5819790314d0b8e3dde5
+      size: 6757163
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video50.mp4
+      hash: md5
+      md5: ab20980ebf880e66b9e48da2eacda629
+      size: 1714763
+  generate_single_agent_training_video_160m@75:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video75.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
+      hash: md5
+      md5: 84dd32bcc93211ce02f3c7c7f00af0f4
+      size: 6529908
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video75.mp4
+      hash: md5
+      md5: b6da47580e644c5127fa0ac103bd5c05
+      size: 1651073
+  generate_single_agent_training_video_160m@100:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video100.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
+      hash: md5
+      md5: 2c33ffc3638220a37c2ea5317d4c37c6
+      size: 6550172
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video100.mp4
+      hash: md5
+      md5: 8f70db10d0a3ad5ad27bc88e291d3ed9
+      size: 1602583
+  generate_single_agent_training_video_160m@112:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_160m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_160m_distance/video112.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
+      hash: md5
+      md5: 1954db368867bd41771335e52890f9af
+      size: 6587349
+    outs:
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video112.mp4
+      hash: md5
+      md5: 287da2fef3ee16211509ddf8a220f89c
+      size: 1549905
+  single_agent_eval_for_training_video_300m@112:
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+      POLICY_CHECKPOINT_NAME=weights112 
+      OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/300m 
+      OUTPUT_FILENAME=epoch112 THERMAL=bird_single_agent_train_thermal 
+      GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
+      EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
+      TANGENT_DISTANCE_M=212.13 STARTING_DISTANCE_M=212.13
+    outs:
+    - path: results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
+      hash: md5
+      md5: e0e12112a1f8d1aefd5d60f3c19ef35d
+      size: 7307976
+  generate_single_agent_training_video_300m@112:
+    cmd: task play-gaussian-observation-log 
+      OBS_LOG_FILEPATH=results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
+      SCENE=1 EPISODE=0 TIME_S=0. AIR_VELOCITY_SPACING_M=20 VOLUME_SPACING_M=10 
+      USE_CACHED=true THERMAL=bird_single_agent_train_thermal 
+      CONFIG_DIR=config/birds/videos CONFIG_NAME=gaussian_during_training_300m 
+      VIDEO_PATH=results/videos/gaussian_train/raw/from_300m_distance/video112.mp4
+      VIDEO_FRAME_STEP_S=0.5 VIDEO_FPS=50
+    deps:
+    - path: results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
+      hash: md5
+      md5: e0e12112a1f8d1aefd5d60f3c19ef35d
+      size: 7307976
+    outs:
+    - path: results/videos/gaussian_train/raw/from_300m_distance/video112.mp4
+      hash: md5
+      md5: 83d78ec9a4aad44e0a951ab10ffa591a
+      size: 3780869
+  train_multi_agent:
+    cmd: task train-multi-agent SEQ_LENGTH=50 AGENT_SEQ_LENGTH=5 DT_S=0.4 
+      DECISION_DT_S=0.8 TRAIN_THERMAL=multi_agent_thermal_wind 
+      TEST_THERMAL=multi_agent_thermal_wind 
+      TRAIN_GLIDER=bird_glider_wing_loading_7 
+      TEST_GLIDER=bird_glider_wing_loading_7 PEER_POLICY_NEPTUNE_ID=GLID-4517
+    deps:
+    - path: config/birds/two_level_multi_agent_train_config.yaml
+      hash: md5
+      md5: 0049eb2bbda13b7c86d5c5f7dfd3c9de
+      size: 9229
+    params:
+      params.yaml:
+        train.multi_agent:
+          thermal:
+            train: multi_agent_thermal_wind
+            test: multi_agent_thermal_wind
+          glider:
+            train: bird_glider_wing_loading_7
+            test: bird_glider_wing_loading_7
+          timing:
+            dt_s: 0.4
+            decision_dt_s: 0.8
+          seq_length: 50
+          agent_seq_length: 5
+          peer_policy:
+            neptune_id: GLID-4517
+  eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance:
+    cmd: task 
+      realistic:eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance
+      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
+      SEQ_LENGTH=50 EPISODE_COUNT=10 GLOB="*"
+    params:
+      params.yaml:
+        eval.from_close_distance.student_alone:
+          glob: '*'
+        eval.policy:
+          neptune_id: GLID-4924
+          checkpoint_name: weights108
+          seq_length: 50
+          agent_seq_length: 5
+    outs:
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+  generate_glider_with_birds_in_realistic_thermal_video_csv:
+    cmd: python -m bird_comparison.scripts.create_video_csv
+    deps:
+    - path: 
+        data/bird_comparison/processed/stork_trajectories_as_observation_log/merged_observation_log.csv
+      hash: md5
+      md5: 2acf02ef7fcba99661b31af501edc7e6
+      size: 6823430
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes/student_with_birds_424.26406871m_424.26406871m.csv
+      hash: md5
+      md5: 2f49ab25239a16ad180bc26300ad8eee
+      size: 875176157
+    outs:
+    - path: data/bird_comparison/processed/video/video.csv
+      hash: md5
+      md5: a33c6ffa72971b24ee0166006f393a52
+      size: 2108158
+  load_snapshot_archive:
+    cmd:
+    - tar -xzvf snapshot_v1.tar.gz
+    outs:
+    - path: data/bird_comparison/decomposed_extrapolated_data
+      hash: md5
+      md5: f73f71f47890a249f4fa36012b402c53.dir
+      size: 126938239
+      nfiles: 98
+    - path: data/bird_comparison/input_stork_data
+      hash: md5
+      md5: 4517a7cc76a5d99ce34b2453f5d4b7db.dir
+      size: 1102557
+      nfiles: 7
+    - path: data/bird_comparison/processed/stork_trajectories
+      hash: md5
+      md5: dee5d2ff20db1a630aeb16ad290d9ba5.dir
+      size: 2837231
+      nfiles: 7
+    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
+      hash: md5
+      md5: 6076d49303864d015f2a716de9557e3f.dir
+      size: 6823430
+      nfiles: 1
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b010
+      hash: md5
+      md5: 3f27b67b73d469420b3e7275e01df62b.dir
+      size: 618234048
+      nfiles: 3
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b0230
+      hash: md5
+      md5: f201d7c6fceadfcc7e8f79450127c126.dir
+      size: 206832831
+      nfiles: 3
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b072
+      hash: md5
+      md5: e4609f90cd03a664e6bfe2275abe6960.dir
+      size: 276182887
+      nfiles: 3
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b077
+      hash: md5
+      md5: 36633296644f8f2cbae40c5c7dd38758.dir
+      size: 35372062
+      nfiles: 3
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b112
+      hash: md5
+      md5: 1e9ae94243820b42c40248e7967bed95.dir
+      size: 224581617
+      nfiles: 3
+    - path: data/bird_comparison/processed/thermal_plots/realistic/b121
+      hash: md5
+      md5: 20c7483f870de1cef9252ec2b7c4acd2.dir
+      size: 411325750
+      nfiles: 3
+    - path: data/bird_comparison/processed/video/video.csv
+      hash: md5
+      md5: a33c6ffa72971b24ee0166006f393a52
+      size: 2108158
+    - path: data/bird_comparison/stork_meta
+      hash: md5
+      md5: 629729550944ad2993c07f46cd91b32b.dir
+      size: 2294
+      nfiles: 1
+    - path: data/bird_comparison/wing_loading_stork
+      hash: md5
+      md5: b92f0b69b06ef483293cd17503f0a3e4.dir
+      size: 1132
+      nfiles: 1
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/episode_success
+      hash: md5
+      md5: d64aba1edb61dff32f1d715148cb583c.dir
+      size: 425113
+      nfiles: 16
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.png
+      hash: md5
+      md5: 5fbd4367b9399e4d3571e3aee531c09a
+      size: 315270
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.svg
+      hash: md5
+      md5: 8eab82c32cb7b7529d61f5042479e5f7
+      size: 16904167
+    - path: 
+        results/analysis/from_close_distance_using_bird_wing_loadings/vertical_velocity
+      hash: md5
+      md5: a4f967d0cc816c6bf3cee207150df6ee.dir
+      size: 1531820077
+      nfiles: 31
+    - path: 
+        results/analysis/from_different_distances_using_train_glider/altitude_achievement_percent
+      hash: md5
+      md5: e522cd1493fc8298db151735252d14ce.dir
+      size: 560148
+      nfiles: 15
+    - path: 
+        results/analysis/from_different_distances_using_train_glider/wind_speed
+      hash: md5
+      md5: 1874d570609375fdc7fb57ec5824aaf2.dir
+      size: 1691562
+      nfiles: 16
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
+      hash: md5
+      md5: 40813d8b15ef08059a57e232df00822b
+      size: 2575720
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
+      hash: md5
+      md5: 81db605e9db1c5b1e8fbc8be4b5c8685
+      size: 11249606
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
+      hash: md5
+      md5: 2c33ffc3638220a37c2ea5317d4c37c6
+      size: 6550172
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
+      hash: md5
+      md5: 1954db368867bd41771335e52890f9af
+      size: 6587349
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
+      hash: md5
+      md5: 3bb995cd46ca40ff0f69fb1b7ff1f573
+      size: 7629512
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
+      hash: md5
+      md5: 1fd0128453b627b2cce1f5d1812c44a5
+      size: 1849944
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
+      hash: md5
+      md5: faf99551b1c6ac756bb8b20a66fe2cf1
+      size: 7767548
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
+      hash: md5
+      md5: f8f7d3179a84bb338918e2302aa0594f
+      size: 7531387
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
+      hash: md5
+      md5: 26c4872158ed36bcf96e1e1c4a2693d0
+      size: 2354977
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
+      hash: md5
+      md5: 9d0dd48e39752d1bbe5540b397b3ed6d
+      size: 6475016
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
+      hash: md5
+      md5: 8c8dbd4601741998f8f7f78e53eeed8c
+      size: 6166288
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
+      hash: md5
+      md5: 125e45e6c3b67c23a54137c038fc7a0d
+      size: 2541733
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
+      hash: md5
+      md5: 073c53c46ea8ec917c042c62a9f91cc6
+      size: 6595872
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
+      hash: md5
+      md5: 2a6d5744835a73fdd6e86bc9894e342c
+      size: 1910210
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
+      hash: md5
+      md5: 35069098d84b5819790314d0b8e3dde5
+      size: 6757163
+    - path: results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
+      hash: md5
+      md5: 84dd32bcc93211ce02f3c7c7f00af0f4
+      size: 6529908
+    - path: results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
+      hash: md5
+      md5: e0e12112a1f8d1aefd5d60f3c19ef35d
+      size: 7307976
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
+      hash: md5
+      md5: 0432a4921e6f3c4301c8764753b5861e.dir
+      size: 1747341769
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
+      hash: md5
+      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
+      size: 1771869921
+      nfiles: 1
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/GLID-4924/100_episodes
+      hash: md5
+      md5: 5184f3907f5c9da1ad3257c4452ce848.dir
+      size: 7079462892
+      nfiles: 8
+    - path: 
+        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes
+      hash: md5
+      md5: d5254675c8fcbffb4fa6689b4d6cc8e2.dir
+      size: 8306246376
+      nfiles: 8
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video1.mp4
+      hash: md5
+      md5: 778f522cc998b02f2784a0012f50748a
+      size: 1699741
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video10.mp4
+      hash: md5
+      md5: 681db74af77a62f93f842879f4950706
+      size: 2544852
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video100.mp4
+      hash: md5
+      md5: 8f70db10d0a3ad5ad27bc88e291d3ed9
+      size: 1602583
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video112.mp4
+      hash: md5
+      md5: 287da2fef3ee16211509ddf8a220f89c
+      size: 1549905
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video15.mp4
+      hash: md5
+      md5: 332c02b9da75286bff88c0406de7b5c4
+      size: 5028144
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video2.mp4
+      hash: md5
+      md5: 1ef7eb25ac3d3b9774c11f6af3b6219a
+      size: 1466959
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video20.mp4
+      hash: md5
+      md5: 75a7566dec04f36e0aae5e0553a065e9
+      size: 3982632
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video25.mp4
+      hash: md5
+      md5: e2a0d79c1c4e6e3595a172ed37ebdc2c
+      size: 1713674
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video3.mp4
+      hash: md5
+      md5: 5cd00bf4d90c36e460c91ecad8422f5c
+      size: 441867
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video30.mp4
+      hash: md5
+      md5: 4e3caa9151df5c56800a118c21d5b624
+      size: 1663832
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video35.mp4
+      hash: md5
+      md5: 4dc1ffd9061bc770376803c2003d2de5
+      size: 1729943
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video4.mp4
+      hash: md5
+      md5: 5ca5016d6f5933514f438d14777d714e
+      size: 2535500
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video40.mp4
+      hash: md5
+      md5: cacb237ba4f98c4eeb1434c990190f01
+      size: 1602532
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video5.mp4
+      hash: md5
+      md5: 92d7c77c8fd3661ba500c16657626ae7
+      size: 496934
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video50.mp4
+      hash: md5
+      md5: ab20980ebf880e66b9e48da2eacda629
+      size: 1714763
+    - path: results/videos/gaussian_train/raw/from_160m_distance/video75.mp4
+      hash: md5
+      md5: b6da47580e644c5127fa0ac103bd5c05
+      size: 1651073
+    - path: results/videos/gaussian_train/raw/from_300m_distance/video112.mp4
+      hash: md5
+      md5: 83d78ec9a4aad44e0a951ab10ffa591a
+      size: 3780869
+    - path: 
+        results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
+      hash: md5
+      md5: 1d9b6f4e93d577129148776523668704
+      size: 225173797
+    - path: 
+        results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
+      hash: md5
+      md5: 8b727bc49e547448867ab24143b1bc7b
+      size: 106320170
+  create_snapshot_archive:
+    cmd:
+    - rm -rf tmp_snapshot
+    - dvc get . data/ --out tmp_snapshot/data
+    - dvc get . results/ --out tmp_snapshot/results
+    - (cd tmp_snapshot && tar -czvf ../snapshot_v1.tar.gz *)
+    - rm -rf tmp_snapshot
+    deps:
+    - path: data/
+      hash: md5
+      md5: 97faa1bc2f0fda9834ab793dcb106d03.dir
+      size: 12778082469
+      nfiles: 184
+    - path: results/
+      hash: md5
+      md5: e280332373c5bfe70f935360724c1821.dir
+      size: 20948072762
+      nfiles: 147

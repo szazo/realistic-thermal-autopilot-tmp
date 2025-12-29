@@ -1,0 +1,17 @@
+defaults:
+  - slurm_base
+
+# slurm partition
+partition: cpu
+
+# for our task 1 cpu is enough
+cpus_per_task: 1
+
+# number of gpus for the tasks
+gpus_per_task: 0
+
+# minimum number of gpus per node
+gpus_per_node: 0
+
+# memory requirement for each CPU
+mem_per_cpu: 16000M

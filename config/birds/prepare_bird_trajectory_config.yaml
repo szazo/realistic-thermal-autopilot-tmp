@@ -1,0 +1,39 @@
+defaults:
+  - experiment_config
+  - custom_job@job: trajectory_to_observation_log_converter
+  - /env/glider/air_velocity_field@job.air_velocity_field: ???
+  - override hydra/job_logging: custom_logging
+  - _self_
+
+job:
+  params:
+    trajectory_path: data/processed/bird_comparison/input_stork_data/???/data.csv
+    additional_columns:
+      thermal: ???
+      bird_name: ???
+      mass_kg: ???
+      wing_area_m2: ???
+      CL: ???
+      CD: ???
+      agent_type: bird
+      episode: 0
+      training: nature
+      original_thermal_z_min: ??
+      original_thermal_z_max: ??
+      cutoff_reason: none
+    trajectory_converter:
+      shift_time_to_zero: true
+      field_mappings:
+        time_field: time
+        x_field: X
+        y_field: Y
+        z_field: Z
+        roll_deg_field: roll_deg
+      filters:
+        bird_name: ???
+
+hydra:
+  job_logging:
+    loggers:
+      TrajectoryToObservationLogConverterJob:
+        level: DEBUG

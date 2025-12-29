@@ -1,0 +1,19 @@
+defaults:
+  - /air_velocity_sampler@_here_: polar
+  - /distribution@noise.x: normal
+  - /distribution@noise.y: normal
+  - /distribution@noise.z: normal
+
+
+r_max_m: 150
+r_step_m: 5
+z_min_m: 0
+z_max_m: 1600
+z_step_m: 5
+noise:
+  x:
+    sigma: 5.
+  y:
+    sigma: 5.
+  z:
+    sigma: 15.

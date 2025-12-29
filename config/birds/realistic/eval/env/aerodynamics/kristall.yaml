@@ -1,0 +1,7 @@
+defaults:
+- /base_simple_aerodynamics
+- _self_
+CL: 1.5
+CD: 0.09
+mass_kg: 2.94
+wing_area_m2: 0.38336658451668426

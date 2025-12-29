@@ -1,0 +1,6 @@
+defaults:
+  - /air_velocity_sampler@_here_: grid
+
+bounds:
+  box_size: [3000,3000,1600]
+spacing_m: [140, 140, 140]
