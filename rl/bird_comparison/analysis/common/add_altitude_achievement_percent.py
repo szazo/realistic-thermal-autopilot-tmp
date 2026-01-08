@@ -27,17 +27,12 @@ def add_agent_initial_and_maximum_altitude(ds: xr.Dataset):
 
 
 def agent_initial_altitude(ds: xr.Dataset) -> xr.DataArray:
-    # agent_initial_altitude_da = ds['position_earth_m_z'].sel(
-    #     time_s=0.0, method='nearest', tolerance=1e-6).assign_attrs(units='meters')
-
     # search first non-nan
     altitude_da = ds['position_earth_m_z']
     mask = ~altitude_da.isnull()
     first_idx = mask.argmax(dim='time_s')
 
     agent_initial_altitude_da = altitude_da.isel(time_s=first_idx)
-
-    # agent_initial_altitude_da = ds['position_earth_m_z'].isel(time_s=0).assign_attrs(units='meters')
 
     return agent_initial_altitude_da
 

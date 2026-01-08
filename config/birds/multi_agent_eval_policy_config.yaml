@@ -8,7 +8,6 @@ defaults:
   - eval/initial_conditions@evaluators.main.env.env.params: common_initial_conditions
     
   - env/observation_logger@evaluators.main.observation_logger.env: singleglider_observation_logger
-  - logger@model_source_logger: neptune_logger
   - logger@logger: neptune_logger
   - override hydra/job_logging: custom_logging
   - _self_
@@ -17,9 +16,9 @@ experiment_name: multi_agent_eval
   
 device: cpu
 
-model_source_logger:
-  with_existing_id: ???
-  readonly: true
+evaluation_policy:
+  path: ???
+  checkpoint: ???
 
 evaluators:
   main:
@@ -34,7 +33,7 @@ evaluators:
       additional_columns:
         thermal: multi_agent_eval
         agent_type: ai
-        training: ${model_source_logger.with_existing_id}
+        training: ${evaluation_policy.path}
     env:
       vectorized:
         count: 1

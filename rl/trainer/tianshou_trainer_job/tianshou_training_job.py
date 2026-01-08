@@ -182,13 +182,14 @@ class TianshouTrainingJob(TianshouJobBase):
             experiment_logger.log_dict('train_result', result, log_as_str=True)
 
             # evaluate if necessary
-            best_state_dict = ExperimentLoggerWeightStore(
-                experiment_logger).load_best_weights(map_device=device)
+            if len(self._params.evaluators) > 0:
+                best_state_dict = ExperimentLoggerWeightStore(
+                    experiment_logger).load_best_weights(map_device=device)
 
-            self._evaluate(policy=policy,
-                           evaluators=self._params.evaluators,
-                           experiment_logger=experiment_logger,
-                           weights_state_dict=best_state_dict)
+                self._evaluate(policy=policy,
+                               evaluators=self._params.evaluators,
+                               experiment_logger=experiment_logger,
+                               weights_state_dict=best_state_dict)
 
             self._finished(success=True, logger=experiment_logger)
 

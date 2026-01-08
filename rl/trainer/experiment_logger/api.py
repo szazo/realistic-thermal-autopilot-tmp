@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from numbers import Number
 
 import numpy as np
 
@@ -15,7 +14,7 @@ class ExperimentLoggerInterface(ABC):
     @abstractmethod
     def log_metrics(self,
                     key: str,
-                    value: float | str | Number | np.number,
+                    value: float | str | np.number,
                     step: int | None = None):
 
         pass
@@ -26,6 +25,10 @@ class ExperimentLoggerInterface(ABC):
                  dictionary: dict,
                  log_as_str=False,
                  log_as_pickle=False):
+        pass
+
+    @abstractmethod
+    def query_dict_pickle(self, key: str, destination_path: str):
         pass
 
     @abstractmethod

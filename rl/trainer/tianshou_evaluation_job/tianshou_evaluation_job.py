@@ -2,18 +2,16 @@ from dataclasses import dataclass, asdict
 from omegaconf import MISSING
 import time
 import logging
-from utils import find_suitable_torch_device
 from ..experiment_logger import ExperimentLoggerConfigBase, ExperimentLoggerInterface
 from ..base.tianshou_job_base import TianshouJobBase, TianshouJobParametersBase
-from ..common import (ExperimentLoggerParameterStore,
-                      ExperimentLoggerWeightStore)
+from ..common import ExperimentLoggerParameterStore
+from ..common.load_policy import PolicyCheckpoint, load_policy
 
 
 @dataclass(kw_only=True)
 class TianshouEvaluationJobParameters(TianshouJobParametersBase):
     device: str = 'cpu'
-    model_source_logger: ExperimentLoggerConfigBase = MISSING
-    checkpoint_name: str = 'best_weights'
+    evaluation_policy: PolicyCheckpoint
     logger: ExperimentLoggerConfigBase = MISSING
 
 
@@ -39,41 +37,9 @@ class TianshouEvaluationJob(TianshouJobBase):
                             self._params.experiment_name)
             t1 = time.perf_counter(), time.process_time()
 
-            model_source_logger = self._create_experiment_logger(
-                self._params.model_source_logger)
-
-            self._log.debug('loading parameters from the experiment logger...')
-            parameter_store = ExperimentLoggerParameterStore(
-                experiment_logger=model_source_logger)
-            parameters = parameter_store.load_parameters()
-
-            model_parameters = parameters['model']
-            self._log.debug('parameters loaded; parameters.model=%s',
-                            model_parameters)
-
-            self._log.debug('creating model based on the parameters...')
-
-            # create the policy
-            device = find_suitable_torch_device(self._params.device)
-            policy = self._create_policy_model(device=device,
-                                               policy_config=model_parameters)
-
-            # create the model based on parameters from the logger
-            self._log.debug('model loaded')
-
-            # load the best weights
-            self._log.debug('loading best weights...')
-            weights_store = ExperimentLoggerWeightStore(
-                experiment_logger=model_source_logger)
-            weights_state_dict = weights_store.load_weights(
-                checkpoint_name=self._params.checkpoint_name,
-                map_device=device)
-
-            self._log.debug('closing source logger...')
-            model_source_logger.stop(success=True)
-            self._log.debug('source logger closed')
-
-            self._log.debug('weights loaded; running the evaluators...')
+            policy, weights_state_dict = load_policy(
+                source=self._params.evaluation_policy,
+                device=self._params.device)
 
             # log the parameters
             ExperimentLoggerParameterStore(experiment_logger).save_parameters(

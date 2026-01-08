@@ -4,7 +4,7 @@ import logging
 from .realistic_air_velocity_field_interface import (
     RealisticAirVelocityFieldInterface,
     DecomposedRealisticAirVelocityFieldInterface)
-from object.air import DecomposedAirVelocityField
+from object.air import ReconstructedAirVelocityField
 
 
 class StackedDecomposedRealisticAirVelocityField(
@@ -108,7 +108,7 @@ class StackedDecomposedRealisticAirVelocityField(
             k: np.nan_to_num(v, nan=0.0)
             for k, v in components.items()
         }
-        velocity = DecomposedAirVelocityField.add_velocities(
+        velocity = ReconstructedAirVelocityField.add_velocities(
             np.array(list(components.values())).T).T
 
         if return_components:

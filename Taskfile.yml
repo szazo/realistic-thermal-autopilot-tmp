@@ -53,14 +53,16 @@ tasks:
         - DECISION_DT_S
         - SEQ_LENGTH
         - AGENT_SEQ_LENGTH
-        - PEER_POLICY_NEPTUNE_ID
+        - PEER_POLICY_RUN_ID
+        - PEER_POLICY_CHECKPOINT_NAME
     cmds:
       - >-
         python -m rl.scripts.run_train
         --config-dir config/birds
         --config-name 'two_level_multi_agent_train_config'
         --multirun
-        model.non_learning.model_source_logger.with_existing_id={{.PEER_POLICY_NEPTUNE_ID}}
+        model.non_learning.policy_checkpoint.path=data/models/single_agent/{{.PEER_POLICY_RUN_ID}}
+        model.non_learning.policy_checkpoint.checkpoint={{.PEER_POLICY_CHECKPOINT_NAME}}
         train_env.env.params.time_params.dt_s={{.DT_S}}
         train_env.env.params.time_params.decision_dt_s={{.DECISION_DT_S}}
         train_env.env.params.max_sequence_length={{.SEQ_LENGTH}}
@@ -110,7 +112,7 @@ tasks:
     requires:
       vars:
         - SEQ_LENGTH
-        - POLICY_NEPTUNE_ID
+        - POLICY_RUN_ID
         - OUTPUT_DIR
         - TANGENT_DISTANCE_M
         - STARTING_DISTANCE_M
@@ -137,8 +139,8 @@ tasks:
         --multirun
         hydra.callbacks.merge_observation_logs.output.target_dir="{{.OUTPUT_DIR}}"
         hydra.callbacks.merge_observation_logs.output.filename_prefix="{{.OUTPUT_FILENAME}}"
-        model_source_logger.with_existing_id={{.POLICY_NEPTUNE_ID}}
-        checkpoint_name={{.POLICY_CHECKPOINT_NAME}}
+        evaluation_policy.path="data/models/single_agent/{{.POLICY_RUN_ID}}"
+        evaluation_policy.checkpoint={{.POLICY_CHECKPOINT_NAME}}
         evaluators.main.env.env.params.max_sequence_length={{.SEQ_LENGTH}}
         evaluators.main.episode_count={{.EPISODE_COUNT}}
         evaluators.main.seed={{.SEED}}
@@ -156,7 +158,7 @@ tasks:
         
   realistic:eval-peer-informed-student-alone-from-different-distances:
     requires:
-      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+      vars: [POLICY_RUN_ID,SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
     cmds:
       - for:
           var: DISTANCE_R_LIST
@@ -165,13 +167,13 @@ tasks:
           TANGENT_DISTANCE_M: '{{.ITEM}}'
           STARTING_DISTANCE_M: '{{.ITEM}}'
           AGENT_SEQ_LENGTH: 1
-          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_different_distances_using_train_glider/{{.POLICY_NEPTUNE_ID}}/student_alone/{{.EPISODE_COUNT}}_episodes'
+          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_different_distances_using_train_glider/{{.POLICY_RUN_ID}}/student_alone/{{.EPISODE_COUNT}}_episodes'
           OUTPUT_FILENAME: 'student_alone_{{.ITEM}}m_{{.ITEM}}m'
           MULTIRUN_OVERRIDE: '+realistic/eval/peer_informed_with_birds/using_train_glider="glob({{.GLOB}})"'
 
   realistic:eval-peer-informed-student-with-birds-from-different-distances:
     requires:
-      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+      vars: [POLICY_RUN_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
     cmds:
       - for:
           var: DISTANCE_R_LIST
@@ -180,13 +182,13 @@ tasks:
           TANGENT_DISTANCE_M: '{{.ITEM}}'
           STARTING_DISTANCE_M: '{{.ITEM}}'
           AGENT_SEQ_LENGTH: '{{.AGENT_SEQ_LENGTH}}'
-          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/{{.POLICY_NEPTUNE_ID}}/{{.EPISODE_COUNT}}_episodes'
+          OUTPUT_DIR: 'results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/{{.POLICY_RUN_ID}}/{{.EPISODE_COUNT}}_episodes'
           OUTPUT_FILENAME: 'student_with_birds_{{.ITEM}}m_{{.ITEM}}m'
           MULTIRUN_OVERRIDE: '+realistic/eval/peer_informed_with_birds/using_train_glider="glob({{.GLOB}})"'
 
   realistic:eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance:
     requires:
-      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+      vars: [POLICY_RUN_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
     cmds:
       - task: realistic:eval-peer-informed-student-with-birds
         vars:
@@ -199,7 +201,7 @@ tasks:
 
   realistic:eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance:
     requires:
-      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
+      vars: [POLICY_RUN_ID,SEQ_LENGTH, POLICY_CHECKPOINT_NAME, EPISODE_COUNT]
     cmds:
       - task: realistic:eval-peer-informed-student-with-birds
         vars:
@@ -213,7 +215,7 @@ tasks:
           
   realistic:eval-peer-informed-student-with-birds:
     requires:
-      vars: [POLICY_NEPTUNE_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, TANGENT_DISTANCE_M, STARTING_DISTANCE_M, OUTPUT_DIR, OUTPUT_FILENAME, MULTIRUN_OVERRIDE]
+      vars: [POLICY_RUN_ID,SEQ_LENGTH, AGENT_SEQ_LENGTH, POLICY_CHECKPOINT_NAME, TANGENT_DISTANCE_M, STARTING_DISTANCE_M, OUTPUT_DIR, OUTPUT_FILENAME, MULTIRUN_OVERRIDE]
     vars:
       GLOB: '{{.GLOB | default "*"}}'
       EPISODE_COUNT: '{{.EPISODE_COUNT | default 1}}'
@@ -226,8 +228,8 @@ tasks:
         --config-name 'multi_agent_eval_policy_multirun_config'
         --multirun
         hydra.callbacks.merge_observation_logs.output.filename_prefix="{{.OUTPUT_FILENAME}}"
-        model_source_logger.with_existing_id={{.POLICY_NEPTUNE_ID}}
-        checkpoint_name={{.POLICY_CHECKPOINT_NAME}}
+        evaluation_policy.path="data/models/multi_agent/{{.POLICY_RUN_ID}}"
+        evaluation_policy.checkpoint={{.POLICY_CHECKPOINT_NAME}}
         evaluators.main.episode_count={{.EPISODE_COUNT}}
         evaluators.main.env.env.params.max_sequence_length={{.SEQ_LENGTH}}
         evaluators.main.env.env.params.max_closest_agent_count={{.AGENT_SEQ_LENGTH}}

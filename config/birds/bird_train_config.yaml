@@ -6,22 +6,18 @@ defaults:
   - env/glider/air_velocity_field@test_env.env.air_velocity_field: ???
   - env/glider/aerodynamics@train_env.env.aerodynamics: ???
   - env/glider/aerodynamics@test_env.env.aerodynamics: ???
-  - evaluator@evaluators.main: comparison
-  - env/observation_logger@evaluators.main.observation_logger.env: singleglider_observation_logger
   - trainer: onpolicy
   - trainer/stop_fn: mean_reward_stop
   - model: ppo_custom_transformer
   - model/ppo_policy/dist_fn: categorical
   - model/optimizer: adam
-  - logger: neptune
+  - logger@logger: mlflow_logger
   - override hydra/job_logging: custom_logging
   - _self_
 
 experiment_name: bird_train
 
 device: max_memory_cuda
-logger:
-  project: szazo/glider
 
 trainer:
   max_epoch: 200
@@ -32,30 +28,7 @@ trainer:
   episode_per_test: 100
   stop_fn:
     stop_mean_reward: 2600
-  
-evaluators:
-  main:
-    log_parent_key: eval_main
-    episode_count: 100
-    deterministic_comparison: true
-    deterministic_eval: true
-    compare_with_random_policy: false
-    create_video: false
-    observation_logger:
-      log_buffer_size: 200000
-      additional_columns:
-        thermal: training_eval
-        bird_name: bird_train_glider
-        agent_type: ai
-        training: unknown
-    env:
-      vectorized:
-        count: 15
-        parallel: true
-      collector:
-        exploration_noise: false
-      env: ${test_env.env}
-  
+    
 train_env:
   vectorized:
     count: 25
@@ -225,10 +198,6 @@ hydra:
       LocalTensorBoardExperimentLogger:
         level: DEBUG
       utils.find_suitable_torch_device:
-        level: DEBUG
-      TianshouComparisonEvaluator:
-        level: DEBUG
-      TianshouEvaluator:
         level: DEBUG
       ObservationLogWrapper:
         level: DEBUG

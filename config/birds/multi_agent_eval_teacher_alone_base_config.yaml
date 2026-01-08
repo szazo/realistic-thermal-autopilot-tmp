@@ -3,9 +3,6 @@ defaults:
   # - override hydra/launcher: bird_ray
   - _self_
 
-model_source_logger:
-  with_existing_id: ???
-
 evaluators:
   main:
     # seed: 46

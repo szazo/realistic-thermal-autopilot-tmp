@@ -12,3 +12,5 @@ __pycache__
 *#
 .venv
 snapshot_v*.tar.gz
+mlruns
+mlflow.db

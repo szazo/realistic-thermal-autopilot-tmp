@@ -105,14 +105,20 @@ stages:
   eval-peer-informed-student-alone-from-different-distances:
     cmd: task 
       realistic:eval-peer-informed-student-alone-from-different-distances 
-      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
-      SEQ_LENGTH=50 EPISODE_COUNT=100 GLOB="*"
+      POLICY_RUN_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 SEQ_LENGTH=50 
+      EPISODE_COUNT=100 GLOB="*"
+    deps:
+    - path: data/models/multi_agent/GLID-4924
+      hash: md5
+      md5: 1fb56d131a114e2d0e2bd7b6e293c48a.dir
+      size: 1632757
+      nfiles: 3
     params:
       params.yaml:
         eval.from_different_distances.student_alone:
           glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -126,14 +132,20 @@ stages:
   eval-peer-informed-student-with-birds-from-different-distances:
     cmd: task 
       realistic:eval-peer-informed-student-with-birds-from-different-distances 
-      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
-      SEQ_LENGTH=50 AGENT_SEQ_LENGTH=5 EPISODE_COUNT=100 GLOB="*"
+      POLICY_RUN_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 SEQ_LENGTH=50 
+      AGENT_SEQ_LENGTH=5 EPISODE_COUNT=100 GLOB="*"
+    deps:
+    - path: data/models/multi_agent/GLID-4924
+      hash: md5
+      md5: 1fb56d131a114e2d0e2bd7b6e293c48a.dir
+      size: 1632757
+      nfiles: 3
     params:
       params.yaml:
         eval.from_different_distances.student_with_birds:
           glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -169,14 +181,14 @@ stages:
       nfiles: 8
     - path: rl/bird_comparison/analysis/common
       hash: md5
-      md5: c86172d58ae9e06955770e9b7c79be6f.dir
-      size: 9500
+      md5: ef01842bc5681400d1cb1b0c119d103c.dir
+      size: 8263
       nfiles: 4
     - path: 
         rl/bird_comparison/analysis/different_distances_train_wing_loading/generate_altitude_achievement_percent_by_distance_analysis.py
       hash: md5
-      md5: fe034c540c5b017d2dafc2159cd0c3b4
-      size: 26521
+      md5: f49ce12ae85eac47c0768db39d1c7b3f
+      size: 18901
     params:
       params.yaml:
         eval.from_different_distances:
@@ -187,7 +199,7 @@ stages:
           student_with_birds:
             glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -222,14 +234,20 @@ stages:
   eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance:
     cmd: task 
       realistic:eval-peer-informed-student-with-birds-using-bird-wing-loadings-from-close-distance
-      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
-      SEQ_LENGTH=50 AGENT_SEQ_LENGTH=5 EPISODE_COUNT=10 GLOB="*"
+      POLICY_RUN_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 SEQ_LENGTH=50 
+      AGENT_SEQ_LENGTH=5 EPISODE_COUNT=10 GLOB="*"
+    deps:
+    - path: data/models/multi_agent/GLID-4924
+      hash: md5
+      md5: 1fb56d131a114e2d0e2bd7b6e293c48a.dir
+      size: 1632757
+      nfiles: 3
     params:
       params.yaml:
         eval.from_close_distance.student_with_birds:
           glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -265,12 +283,12 @@ stages:
     - path: 
         rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_vertical_velocity_analysis.py
       hash: md5
-      md5: 2fd1f1d33297cc41813a1b47c27d357f
-      size: 24598
+      md5: 8baaf6f01d9d811d842d7c94fa369e28
+      size: 17035
     - path: rl/bird_comparison/analysis/common
       hash: md5
-      md5: c86172d58ae9e06955770e9b7c79be6f.dir
-      size: 9500
+      md5: ef01842bc5681400d1cb1b0c119d103c.dir
+      size: 8263
       nfiles: 4
     params:
       params.yaml:
@@ -282,7 +300,7 @@ stages:
           student_with_birds:
             glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -318,14 +336,14 @@ stages:
       nfiles: 8
     - path: rl/bird_comparison/analysis/common
       hash: md5
-      md5: c86172d58ae9e06955770e9b7c79be6f.dir
-      size: 9500
+      md5: ef01842bc5681400d1cb1b0c119d103c.dir
+      size: 8263
       nfiles: 4
     - path: 
         rl/bird_comparison/analysis/different_distances_train_wing_loading/generate_wind_speed_analysis.py
       hash: md5
-      md5: bddea659cf732f5fc0556399ee0d4e05
-      size: 18885
+      md5: 4c10ff462278a325ec0a4aede4e5f2be
+      size: 16764
     params:
       params.yaml:
         eval.from_different_distances:
@@ -336,7 +354,7 @@ stages:
           student_with_birds:
             glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -372,12 +390,12 @@ stages:
     - path: 
         rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_episode_success_analysis.py
       hash: md5
-      md5: 7706df4a0d0216d66a77e6b1cb89d1fa
-      size: 7346
+      md5: dc879bc01762a4eb4cdf5998b02a9417
+      size: 6843
     - path: rl/bird_comparison/analysis/common
       hash: md5
-      md5: c86172d58ae9e06955770e9b7c79be6f.dir
-      size: 9500
+      md5: ef01842bc5681400d1cb1b0c119d103c.dir
+      size: 8263
       nfiles: 4
     params:
       params.yaml:
@@ -389,7 +407,7 @@ stages:
           student_with_birds:
             glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -876,12 +894,12 @@ stages:
     - path: 
         rl/bird_comparison/analysis/close_distance_bird_wing_loadings/generate_thermal_trajectory_plot.py
       hash: md5
-      md5: f13af99223a17e2c9e9d8529d9b65739
-      size: 9259
+      md5: ec98c536ea8297940b11460abbe82ce1
+      size: 8058
     - path: rl/bird_comparison/analysis/common
       hash: md5
-      md5: c86172d58ae9e06955770e9b7c79be6f.dir
-      size: 9500
+      md5: ef01842bc5681400d1cb1b0c119d103c.dir
+      size: 8263
       nfiles: 4
     - path: rl/thermal/visualization
       hash: md5
@@ -898,7 +916,7 @@ stages:
           student_with_birds:
             glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -924,8 +942,8 @@ stages:
     deps:
     - path: config/birds/bird_train_config.yaml
       hash: md5
-      md5: 4f901b070d0105ee6c956135d3c25097
-      size: 7629
+      md5: 2ec52694377f2456f252a40794b34084
+      size: 6825
     params:
       params.yaml:
         train.single_agent:
@@ -982,208 +1000,736 @@ stages:
       md5: 1d9b6f4e93d577129148776523668704
       size: 225173797
   single_agent_eval_for_training_video_160m@1:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights1 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch1 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights1.pth
+      hash: md5
+      md5: 033092ed03be647ca5a427985dc4dc9c
+      size: 938472
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
       hash: md5
       md5: 40813d8b15ef08059a57e232df00822b
       size: 2575720
   single_agent_eval_for_training_video_160m@2:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights2 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch2 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights2.pth
+      hash: md5
+      md5: 5d509a3be3502b9a7d852b921f227c29
+      size: 938472
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
       hash: md5
       md5: 1fd0128453b627b2cce1f5d1812c44a5
       size: 1849944
   single_agent_eval_for_training_video_160m@3:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights3 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch3 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights3.pth
+      hash: md5
+      md5: 9593be860d96d528af8a24bad15da10e
+      size: 938472
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
       hash: md5
       md5: 26c4872158ed36bcf96e1e1c4a2693d0
       size: 2354977
   single_agent_eval_for_training_video_160m@4:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights4 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch4 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights4.pth
+      hash: md5
+      md5: 3d4f9df15104713a3824e7750ab528d1
+      size: 938472
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
       hash: md5
       md5: 125e45e6c3b67c23a54137c038fc7a0d
       size: 2541733
   single_agent_eval_for_training_video_160m@5:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights5 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch5 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights5.pth
+      hash: md5
+      md5: 337a1db8f19e650bdae1938f6a329d6c
+      size: 938472
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
       hash: md5
       md5: 2a6d5744835a73fdd6e86bc9894e342c
       size: 1910210
   single_agent_eval_for_training_video_160m@10:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights10 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch10 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights10.pth
+      hash: md5
+      md5: 8923e4e1b3f42c4d6fb0e035f8ef702b
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
       hash: md5
       md5: 81db605e9db1c5b1e8fbc8be4b5c8685
       size: 11249606
   single_agent_eval_for_training_video_160m@15:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights15 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch15 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights15.pth
+      hash: md5
+      md5: 0cc45e5222f0c466cdcf0ee63b925cd4
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
       hash: md5
       md5: 3bb995cd46ca40ff0f69fb1b7ff1f573
       size: 7629512
   single_agent_eval_for_training_video_160m@20:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights20 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch20 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights20.pth
+      hash: md5
+      md5: 3dd42d8a7c749830a3073f7182e06738
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
       hash: md5
       md5: faf99551b1c6ac756bb8b20a66fe2cf1
       size: 7767548
   single_agent_eval_for_training_video_160m@25:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights25 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch25 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights25.pth
+      hash: md5
+      md5: 2c610a959f8e3cf725666453e166e15a
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
       hash: md5
       md5: f8f7d3179a84bb338918e2302aa0594f
       size: 7531387
   single_agent_eval_for_training_video_160m@30:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights30 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch30 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights30.pth
+      hash: md5
+      md5: d82ddf5eac62ba70d9af888340dfcf30
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
       hash: md5
       md5: 9d0dd48e39752d1bbe5540b397b3ed6d
       size: 6475016
   single_agent_eval_for_training_video_160m@35:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights35 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch35 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights35.pth
+      hash: md5
+      md5: 825f6ef9d596fa5af9c76f88f2651055
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
       hash: md5
       md5: 8c8dbd4601741998f8f7f78e53eeed8c
       size: 6166288
   single_agent_eval_for_training_video_160m@40:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights40 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch40 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights40.pth
+      hash: md5
+      md5: a965eba020b14db089ade9ed307713f7
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
       hash: md5
       md5: 073c53c46ea8ec917c042c62a9f91cc6
       size: 6595872
   single_agent_eval_for_training_video_160m@50:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights50 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch50 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights50.pth
+      hash: md5
+      md5: 6218a1df563c11977cee87e9cfe1b215
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
       hash: md5
       md5: 35069098d84b5819790314d0b8e3dde5
       size: 6757163
   single_agent_eval_for_training_video_160m@75:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights75 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch75 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights75.pth
+      hash: md5
+      md5: f039af9932f165aedbeaeb81705f596d
+      size: 938533
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
       hash: md5
       md5: 84dd32bcc93211ce02f3c7c7f00af0f4
       size: 6529908
   single_agent_eval_for_training_video_160m@100:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights100 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch100 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights100.pth
+      hash: md5
+      md5: 17b0345080a0f031db944e89a77e4cf8
+      size: 938594
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
       hash: md5
       md5: 2c33ffc3638220a37c2ea5317d4c37c6
       size: 6550172
   single_agent_eval_for_training_video_160m@112:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights112 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/160m 
       OUTPUT_FILENAME=epoch112 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=50. STARTING_DISTANCE_M=150.
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights112.pth
+      hash: md5
+      md5: 0a835650775aade1361802ba960cba6a
+      size: 938594
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
       hash: md5
@@ -1202,6 +1748,30 @@ stages:
       hash: md5
       md5: 40813d8b15ef08059a57e232df00822b
       size: 2575720
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video1.mp4
       hash: md5
@@ -1220,6 +1790,30 @@ stages:
       hash: md5
       md5: 1fd0128453b627b2cce1f5d1812c44a5
       size: 1849944
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video2.mp4
       hash: md5
@@ -1238,6 +1832,30 @@ stages:
       hash: md5
       md5: 26c4872158ed36bcf96e1e1c4a2693d0
       size: 2354977
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video3.mp4
       hash: md5
@@ -1256,6 +1874,30 @@ stages:
       hash: md5
       md5: 125e45e6c3b67c23a54137c038fc7a0d
       size: 2541733
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video4.mp4
       hash: md5
@@ -1274,6 +1916,30 @@ stages:
       hash: md5
       md5: 2a6d5744835a73fdd6e86bc9894e342c
       size: 1910210
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video5.mp4
       hash: md5
@@ -1292,6 +1958,30 @@ stages:
       hash: md5
       md5: 81db605e9db1c5b1e8fbc8be4b5c8685
       size: 11249606
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video10.mp4
       hash: md5
@@ -1310,6 +2000,30 @@ stages:
       hash: md5
       md5: 3bb995cd46ca40ff0f69fb1b7ff1f573
       size: 7629512
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video15.mp4
       hash: md5
@@ -1328,6 +2042,30 @@ stages:
       hash: md5
       md5: faf99551b1c6ac756bb8b20a66fe2cf1
       size: 7767548
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video20.mp4
       hash: md5
@@ -1346,6 +2084,30 @@ stages:
       hash: md5
       md5: f8f7d3179a84bb338918e2302aa0594f
       size: 7531387
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video25.mp4
       hash: md5
@@ -1364,6 +2126,30 @@ stages:
       hash: md5
       md5: 9d0dd48e39752d1bbe5540b397b3ed6d
       size: 6475016
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video30.mp4
       hash: md5
@@ -1382,6 +2168,30 @@ stages:
       hash: md5
       md5: 8c8dbd4601741998f8f7f78e53eeed8c
       size: 6166288
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video35.mp4
       hash: md5
@@ -1400,6 +2210,30 @@ stages:
       hash: md5
       md5: 073c53c46ea8ec917c042c62a9f91cc6
       size: 6595872
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video40.mp4
       hash: md5
@@ -1418,6 +2252,30 @@ stages:
       hash: md5
       md5: 35069098d84b5819790314d0b8e3dde5
       size: 6757163
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video50.mp4
       hash: md5
@@ -1436,6 +2294,30 @@ stages:
       hash: md5
       md5: 84dd32bcc93211ce02f3c7c7f00af0f4
       size: 6529908
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video75.mp4
       hash: md5
@@ -1454,6 +2336,30 @@ stages:
       hash: md5
       md5: 2c33ffc3638220a37c2ea5317d4c37c6
       size: 6550172
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video100.mp4
       hash: md5
@@ -1472,19 +2378,76 @@ stages:
       hash: md5
       md5: 1954db368867bd41771335e52890f9af
       size: 6587349
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_160m_distance/video112.mp4
       hash: md5
       md5: 287da2fef3ee16211509ddf8a220f89c
       size: 1549905
   single_agent_eval_for_training_video_300m@112:
-    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_NEPTUNE_ID=GLID-5000
+    cmd: task eval-single-agent-policy SEQ_LENGTH=50 POLICY_RUN_ID=GLID-5000 
       POLICY_CHECKPOINT_NAME=weights112 
       OUTPUT_DIR=results/eval/gaussian/single_agent/during_training/300m 
       OUTPUT_FILENAME=epoch112 THERMAL=bird_single_agent_train_thermal 
       GLIDER=bird_glider_wing_loading_7 DT_S=0.4 DECISION_DT_S=0.8 
       EPISODE_COUNT=1 OVERRIDES="+eval/gaussian/models/policy='glob(*eval1*)'" 
       TANGENT_DISTANCE_M=212.13 STARTING_DISTANCE_M=212.13
+    deps:
+    - path: data/models/single_agent/GLID-5000/model.json
+      hash: md5
+      md5: 5ff38bcdcc3798288698f4b07b7feae0
+      size: 1902
+    - path: data/models/single_agent/GLID-5000/weights112.pth
+      hash: md5
+      md5: 0a835650775aade1361802ba960cba6a
+      size: 938594
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
       hash: md5
@@ -1503,6 +2466,30 @@ stages:
       hash: md5
       md5: e0e12112a1f8d1aefd5d60f3c19ef35d
       size: 7307976
+    params:
+      params.yaml:
+        training_video:
+          run_id: GLID-5000
+          download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112
+          epochs_160m:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 35
+          - 40
+          - 50
+          - 75
+          - 100
+          - 112
+          epochs_300m:
+          - 112
     outs:
     - path: results/videos/gaussian_train/raw/from_300m_distance/video112.mp4
       hash: md5
@@ -1513,12 +2500,18 @@ stages:
       DECISION_DT_S=0.8 TRAIN_THERMAL=multi_agent_thermal_wind 
       TEST_THERMAL=multi_agent_thermal_wind 
       TRAIN_GLIDER=bird_glider_wing_loading_7 
-      TEST_GLIDER=bird_glider_wing_loading_7 PEER_POLICY_NEPTUNE_ID=GLID-4517
+      TEST_GLIDER=bird_glider_wing_loading_7 PEER_POLICY_RUN_ID=GLID-4517 
+      PEER_POLICY_CHECKPOINT_NAME=best_weights
     deps:
     - path: config/birds/two_level_multi_agent_train_config.yaml
       hash: md5
-      md5: 0049eb2bbda13b7c86d5c5f7dfd3c9de
-      size: 9229
+      md5: e6d44170a2129f1e033311fbf83cbb0d
+      size: 9149
+    - path: data/models/single_agent/GLID-4517
+      hash: md5
+      md5: 0a163e106d5db8b54762f589bdb42f27.dir
+      size: 955450
+      nfiles: 3
     params:
       params.yaml:
         train.multi_agent:
@@ -1534,18 +2527,25 @@ stages:
           seq_length: 50
           agent_seq_length: 5
           peer_policy:
-            neptune_id: GLID-4517
+            run_id: GLID-4517
+            checkpoint: best_weights
   eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance:
     cmd: task 
       realistic:eval-peer-informed-student-alone-using-bird-wing-loadings-from-close-distance
-      POLICY_NEPTUNE_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 
-      SEQ_LENGTH=50 EPISODE_COUNT=10 GLOB="*"
+      POLICY_RUN_ID=GLID-4924 POLICY_CHECKPOINT_NAME=weights108 SEQ_LENGTH=50 
+      EPISODE_COUNT=10 GLOB="*"
+    deps:
+    - path: data/models/multi_agent/GLID-4924
+      hash: md5
+      md5: 1fb56d131a114e2d0e2bd7b6e293c48a.dir
+      size: 1632757
+      nfiles: 3
     params:
       params.yaml:
         eval.from_close_distance.student_alone:
           glob: '*'
         eval.policy:
-          neptune_id: GLID-4924
+          run_id: GLID-4924
           checkpoint_name: weights108
           seq_length: 50
           agent_seq_length: 5
@@ -1576,276 +2576,16 @@ stages:
       size: 2108158
   load_snapshot_archive:
     cmd:
+    - rm -rf snapshot_v1.tar.gz
+    - http --download 
+      "https://sandbox.zenodo.org/records/420119/files/snapshot_v1.tar.gz?download=1"
     - tar -xzvf snapshot_v1.tar.gz
-    outs:
-    - path: data/bird_comparison/decomposed_extrapolated_data
-      hash: md5
-      md5: f73f71f47890a249f4fa36012b402c53.dir
-      size: 126938239
-      nfiles: 98
-    - path: data/bird_comparison/input_stork_data
-      hash: md5
-      md5: 4517a7cc76a5d99ce34b2453f5d4b7db.dir
-      size: 1102557
-      nfiles: 7
-    - path: data/bird_comparison/processed/stork_trajectories
-      hash: md5
-      md5: dee5d2ff20db1a630aeb16ad290d9ba5.dir
-      size: 2837231
-      nfiles: 7
-    - path: data/bird_comparison/processed/stork_trajectories_as_observation_log
-      hash: md5
-      md5: 6076d49303864d015f2a716de9557e3f.dir
-      size: 6823430
-      nfiles: 1
-    - path: data/bird_comparison/processed/thermal_plots/realistic/b010
-      hash: md5
-      md5: 3f27b67b73d469420b3e7275e01df62b.dir
-      size: 618234048
-      nfiles: 3
-    - path: data/bird_comparison/processed/thermal_plots/realistic/b0230
-      hash: md5
-      md5: f201d7c6fceadfcc7e8f79450127c126.dir
-      size: 206832831
-      nfiles: 3
-    - path: data/bird_comparison/processed/thermal_plots/realistic/b072
-      hash: md5
-      md5: e4609f90cd03a664e6bfe2275abe6960.dir
-      size: 276182887
-      nfiles: 3
-    - path: data/bird_comparison/processed/thermal_plots/realistic/b077
-      hash: md5
-      md5: 36633296644f8f2cbae40c5c7dd38758.dir
-      size: 35372062
-      nfiles: 3
-    - path: data/bird_comparison/processed/thermal_plots/realistic/b112
-      hash: md5
-      md5: 1e9ae94243820b42c40248e7967bed95.dir
-      size: 224581617
-      nfiles: 3
-    - path: data/bird_comparison/processed/thermal_plots/realistic/b121
-      hash: md5
-      md5: 20c7483f870de1cef9252ec2b7c4acd2.dir
-      size: 411325750
-      nfiles: 3
-    - path: data/bird_comparison/processed/video/video.csv
-      hash: md5
-      md5: a33c6ffa72971b24ee0166006f393a52
-      size: 2108158
-    - path: data/bird_comparison/stork_meta
-      hash: md5
-      md5: 629729550944ad2993c07f46cd91b32b.dir
-      size: 2294
-      nfiles: 1
-    - path: data/bird_comparison/wing_loading_stork
-      hash: md5
-      md5: b92f0b69b06ef483293cd17503f0a3e4.dir
-      size: 1132
-      nfiles: 1
+    deps:
     - path: 
-        results/analysis/from_close_distance_using_bird_wing_loadings/episode_success
+        https://sandbox.zenodo.org/records/420119/files/snapshot_v1.tar.gz?download=1
       hash: md5
-      md5: d64aba1edb61dff32f1d715148cb583c.dir
-      size: 425113
-      nfiles: 16
-    - path: 
-        results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.png
-      hash: md5
-      md5: 5fbd4367b9399e4d3571e3aee531c09a
-      size: 315270
-    - path: 
-        results/analysis/from_close_distance_using_bird_wing_loadings/trajectory_plot/b010-Bubbel-0.svg
-      hash: md5
-      md5: 8eab82c32cb7b7529d61f5042479e5f7
-      size: 16904167
-    - path: 
-        results/analysis/from_close_distance_using_bird_wing_loadings/vertical_velocity
-      hash: md5
-      md5: a4f967d0cc816c6bf3cee207150df6ee.dir
-      size: 1531820077
-      nfiles: 31
-    - path: 
-        results/analysis/from_different_distances_using_train_glider/altitude_achievement_percent
-      hash: md5
-      md5: e522cd1493fc8298db151735252d14ce.dir
-      size: 560148
-      nfiles: 15
-    - path: 
-        results/analysis/from_different_distances_using_train_glider/wind_speed
-      hash: md5
-      md5: 1874d570609375fdc7fb57ec5824aaf2.dir
-      size: 1691562
-      nfiles: 16
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch1.csv
-      hash: md5
-      md5: 40813d8b15ef08059a57e232df00822b
-      size: 2575720
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch10.csv
-      hash: md5
-      md5: 81db605e9db1c5b1e8fbc8be4b5c8685
-      size: 11249606
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch100.csv
-      hash: md5
-      md5: 2c33ffc3638220a37c2ea5317d4c37c6
-      size: 6550172
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch112.csv
-      hash: md5
-      md5: 1954db368867bd41771335e52890f9af
-      size: 6587349
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch15.csv
-      hash: md5
-      md5: 3bb995cd46ca40ff0f69fb1b7ff1f573
-      size: 7629512
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch2.csv
-      hash: md5
-      md5: 1fd0128453b627b2cce1f5d1812c44a5
-      size: 1849944
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch20.csv
-      hash: md5
-      md5: faf99551b1c6ac756bb8b20a66fe2cf1
-      size: 7767548
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch25.csv
-      hash: md5
-      md5: f8f7d3179a84bb338918e2302aa0594f
-      size: 7531387
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch3.csv
-      hash: md5
-      md5: 26c4872158ed36bcf96e1e1c4a2693d0
-      size: 2354977
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch30.csv
-      hash: md5
-      md5: 9d0dd48e39752d1bbe5540b397b3ed6d
-      size: 6475016
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch35.csv
-      hash: md5
-      md5: 8c8dbd4601741998f8f7f78e53eeed8c
-      size: 6166288
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch4.csv
-      hash: md5
-      md5: 125e45e6c3b67c23a54137c038fc7a0d
-      size: 2541733
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch40.csv
-      hash: md5
-      md5: 073c53c46ea8ec917c042c62a9f91cc6
-      size: 6595872
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch5.csv
-      hash: md5
-      md5: 2a6d5744835a73fdd6e86bc9894e342c
-      size: 1910210
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch50.csv
-      hash: md5
-      md5: 35069098d84b5819790314d0b8e3dde5
-      size: 6757163
-    - path: results/eval/gaussian/single_agent/during_training/160m/epoch75.csv
-      hash: md5
-      md5: 84dd32bcc93211ce02f3c7c7f00af0f4
-      size: 6529908
-    - path: results/eval/gaussian/single_agent/during_training/300m/epoch112.csv
-      hash: md5
-      md5: e0e12112a1f8d1aefd5d60f3c19ef35d
-      size: 7307976
-    - path: 
-        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_alone/GLID-4924/10_episodes
-      hash: md5
-      md5: 0432a4921e6f3c4301c8764753b5861e.dir
-      size: 1747341769
-      nfiles: 1
-    - path: 
-        results/eval/realistic/peer_informed/from_close_distance_using_bird_wing_loadings/student_with_birds/GLID-4924/10_episodes
-      hash: md5
-      md5: ad6f236b277f8cf6a397d3213bffa3a2.dir
-      size: 1771869921
-      nfiles: 1
-    - path: 
-        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_alone/GLID-4924/100_episodes
-      hash: md5
-      md5: 5184f3907f5c9da1ad3257c4452ce848.dir
-      size: 7079462892
-      nfiles: 8
-    - path: 
-        results/eval/realistic/peer_informed/from_different_distances_using_train_glider/student_with_birds/GLID-4924/100_episodes
-      hash: md5
-      md5: d5254675c8fcbffb4fa6689b4d6cc8e2.dir
-      size: 8306246376
-      nfiles: 8
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video1.mp4
-      hash: md5
-      md5: 778f522cc998b02f2784a0012f50748a
-      size: 1699741
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video10.mp4
-      hash: md5
-      md5: 681db74af77a62f93f842879f4950706
-      size: 2544852
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video100.mp4
-      hash: md5
-      md5: 8f70db10d0a3ad5ad27bc88e291d3ed9
-      size: 1602583
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video112.mp4
-      hash: md5
-      md5: 287da2fef3ee16211509ddf8a220f89c
-      size: 1549905
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video15.mp4
-      hash: md5
-      md5: 332c02b9da75286bff88c0406de7b5c4
-      size: 5028144
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video2.mp4
-      hash: md5
-      md5: 1ef7eb25ac3d3b9774c11f6af3b6219a
-      size: 1466959
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video20.mp4
-      hash: md5
-      md5: 75a7566dec04f36e0aae5e0553a065e9
-      size: 3982632
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video25.mp4
-      hash: md5
-      md5: e2a0d79c1c4e6e3595a172ed37ebdc2c
-      size: 1713674
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video3.mp4
-      hash: md5
-      md5: 5cd00bf4d90c36e460c91ecad8422f5c
-      size: 441867
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video30.mp4
-      hash: md5
-      md5: 4e3caa9151df5c56800a118c21d5b624
-      size: 1663832
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video35.mp4
-      hash: md5
-      md5: 4dc1ffd9061bc770376803c2003d2de5
-      size: 1729943
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video4.mp4
-      hash: md5
-      md5: 5ca5016d6f5933514f438d14777d714e
-      size: 2535500
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video40.mp4
-      hash: md5
-      md5: cacb237ba4f98c4eeb1434c990190f01
-      size: 1602532
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video5.mp4
-      hash: md5
-      md5: 92d7c77c8fd3661ba500c16657626ae7
-      size: 496934
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video50.mp4
-      hash: md5
-      md5: ab20980ebf880e66b9e48da2eacda629
-      size: 1714763
-    - path: results/videos/gaussian_train/raw/from_160m_distance/video75.mp4
-      hash: md5
-      md5: b6da47580e644c5127fa0ac103bd5c05
-      size: 1651073
-    - path: results/videos/gaussian_train/raw/from_300m_distance/video112.mp4
-      hash: md5
-      md5: 83d78ec9a4aad44e0a951ab10ffa591a
-      size: 3780869
-    - path: 
-        results/videos/realistic/encoded/glider_with_birds_in_realistic_thermal_encoded.mp4
-      hash: md5
-      md5: 1d9b6f4e93d577129148776523668704
-      size: 225173797
-    - path: 
-        results/videos/realistic/raw/glider_with_birds_in_realistic_thermal.mp4
-      hash: md5
-      md5: 8b727bc49e547448867ab24143b1bc7b
-      size: 106320170
+      checksum: '151889245835010429683829981080907534222'
+      size: 6220338324
   create_snapshot_archive:
     cmd:
     - rm -rf tmp_snapshot
@@ -1856,11 +2596,55 @@ stages:
     deps:
     - path: data/
       hash: md5
-      md5: 97faa1bc2f0fda9834ab793dcb106d03.dir
-      size: 12778082469
-      nfiles: 184
+      md5: 1bcf7f193bc2ee745a0abcf781fb673d.dir
+      size: 12796661788
+      nfiles: 213
     - path: results/
       hash: md5
-      md5: e280332373c5bfe70f935360724c1821.dir
-      size: 20948072762
-      nfiles: 147
+      md5: ee6f0bbdf5cdbf3ebbde1b19c983dd62.dir
+      size: 20943558988
+      nfiles: 145
+  download_single_agent_model_for_multi_agent_training:
+    cmd: python -m scripts.download_model checkpoint --run-id GLID-4517 
+      --checkpoint-name best_weights --target-dir 
+      data/models/single_agent/GLID-4517
+    params:
+      params.yaml:
+        train.multi_agent.peer_policy:
+          run_id: GLID-4517
+          checkpoint: best_weights
+    outs:
+    - path: data/models/single_agent/GLID-4517
+      hash: md5
+      md5: 0a163e106d5db8b54762f589bdb42f27.dir
+      size: 955450
+      nfiles: 3
+  download_trained_multi_agent_model:
+    cmd: python -m scripts.download_model checkpoint --run-id GLID-4924 
+      --checkpoint-name weights108 --target-dir 
+      data/models/multi_agent/GLID-4924
+    params:
+      params.yaml:
+        eval.policy.checkpoint_name: weights108
+        eval.policy.run_id: GLID-4924
+    outs:
+    - path: data/models/multi_agent/GLID-4924
+      hash: md5
+      md5: 1fb56d131a114e2d0e2bd7b6e293c48a.dir
+      size: 1632757
+      nfiles: 3
+  download_single_agent_model_for_training_video:
+    cmd: python -m scripts.download_model epochs --run-id GLID-5000 --epochs 1 2
+      3 4 5 10 15 20 25 30 35 40 50 75 100 112 --target-dir 
+      data/models/single_agent/GLID-5000
+    params:
+      params.yaml:
+        training_video.download_epochs: 1 2 3 4 5 10 15 20 25 30 35 40 50 75 100
+          112
+        training_video.run_id: GLID-5000
+    outs:
+    - path: data/models/single_agent/GLID-5000
+      hash: md5
+      md5: 2ff49c01468bf1fe277924034802afc0.dir
+      size: 15044031
+      nfiles: 18

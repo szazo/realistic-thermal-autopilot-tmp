@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from icecream import ic
 import xarray as xr
 from ..common.thermal_map import remap_thermal_names
 from ..common.dataset_utils import (filter_agent_id_pd, remove_thermal,
@@ -45,8 +44,6 @@ def load_per_distance_dataset(policy_neptune_run_id: str, episode_count: int,
 
         print('cache file does not exists, loading .csvs...')
 
-        #r_distances = [50, 400]
-
         agent_id = 'student0'
 
         # student_alone
@@ -71,51 +68,16 @@ def load_per_distance_dataset(policy_neptune_run_id: str, episode_count: int,
             student_with_birds_paths, agent_id=agent_id, base_path=root_path)
         assert student_with_birds_ds is not None
 
-        TEACHER_ALONE = False
-        if TEACHER_ALONE:
-            # teacher_alone
-            teacher_alone_paths = _resolve_dataset_paths(
-                r_distances=r_distances,
-                episode_count=episode_count,
-                policy_neptune_run_id=policy_neptune_run_id,
-                experiment_setup='teacher_alone')
-            teacher_alone_ds = _load_and_merge_datasets(
-                datasets=teacher_alone_paths,
-                agent_id=None,
-                base_path=root_path)
-            assert teacher_alone_ds is not None
-
-            teacher_alone_ds = teacher_alone_ds.expand_dims('agent_id')
-            teacher_alone_ds = teacher_alone_ds.assign_coords(
-                agent_id=['student0'])
-
-            ic(teacher_alone_ds.dims)
-            ic(teacher_alone_ds.coords)
-            ic(teacher_alone_ds['agent_id'])
-
-        # teacher_alone_ds['agent_id'] = 'student0'
-
         student_alone_ds.coords['setup'] = 'student_alone'
         student_with_birds_ds.coords['setup'] = 'student_with_birds'
-        if TEACHER_ALONE:
-            teacher_alone_ds.coords['setup'] = 'teacher_alone'
 
-        ic(student_alone_ds.coords, student_alone_ds.dims)
-
-        ic(student_alone_ds.coords, student_alone_ds.dims)
-        ic(student_with_birds_ds.coords, student_with_birds_ds.dims)
-
-        # teacher_alone_ds
         ds = xr.concat([student_alone_ds, student_with_birds_ds], dim='setup')
 
         ds = filter_agent_id(ds, agent_id=agent_id, drop=True)
 
         thermal_info_ds = resolve_thermal_info_from_bird_dataset2(
             bird_dataset_path, include_per_bird_data=False)
-        ic(thermal_info_ds)
         ds = ds.merge(thermal_info_ds)
-
-        ic(ds.coords, ds.dims)
 
         cache_dir.mkdir(parents=True, exist_ok=True)
         ds.to_netcdf(cache_filepath, engine='scipy')

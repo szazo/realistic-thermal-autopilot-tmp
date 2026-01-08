@@ -28,11 +28,12 @@ train:
     seq_length: 50
     agent_seq_length: 5
     peer_policy:
-      neptune_id: GLID-4517
+      run_id: GLID-4517
+      checkpoint: best_weights
       
 eval:
   policy:
-    neptune_id: GLID-4924
+    run_id: GLID-4924
     checkpoint_name: weights108
     seq_length: 50
     agent_seq_length: 5
@@ -50,6 +51,11 @@ eval:
       glob: '*'
     student_with_birds:
       glob: '*'
+training_video:
+  run_id: GLID-5000
+  download_epochs: '1 2 3 4 5 10 15 20 25 30 35 40 50 75 100 112'
+  epochs_160m: [1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 75, 100, 112]
+  epochs_300m: [112]
 thermal_trajectory_plots:
   - thermal: b010
     episode: 0

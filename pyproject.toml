@@ -58,7 +58,11 @@ dependencies = [
   "icecream ~= 2.1.5",
   "xarray ~= 2024.3.0",
   "netCDF4 ~= 1.7.2",
-  "tyro ~= 0.9.31"
+  "tyro ~= 0.9.31",
+  "mlflow ~= 3.8.1",
+  "flatten-dict ~= 0.4.2",
+  "json-tricks ~= 3.17.3",
+  "nvidia-ml-py ~= 13.590.44"
 ]
 
 [project.urls]

@@ -7,8 +7,6 @@ from ..common.dataset_utils import (filter_agent_id, filter_agent_id_pd,
                                     resolve_thermal_info_from_bird_dataset2)
 import xarray as xr
 
-from icecream import ic
-
 
 @dataclass
 class Info:
@@ -33,14 +31,6 @@ def load_close_distance_dataset(policy_neptune_run_id: str,
     cache_dir = Path('data/cache/from_close_distance_using_bird_wing_loadings')
     cache_filepath = cache_dir / 'from_close_distance_using_bird_wing_loadings.nc'
 
-    # bird_ds = load_bird_dataset(bird_dataset_path)
-    # a = bird_ds['wing_area_m2'].groupby('bird_name', squeeze=False)
-    # ic(a.dims)
-    # b=a.first(dim='episode')
-    # ic(b.coords, b.dims)
-    # # ic(bird_ds.data_vars)
-    # exit()
-
     if not cache_filepath.exists():
 
         print('loading ai datasets...')
@@ -58,9 +48,6 @@ def load_close_distance_dataset(policy_neptune_run_id: str,
         print('loading bird dataset...')
         bird_ds = load_bird_dataset(bird_dataset_path)
         bird_ds.coords['setup'] = 'birds'
-        ic(bird_ds.data_vars)
-        ic(bird_ds.coords)
-        ic(bird_ds.dims)
 
         ds = xr.concat([*ds_list, bird_ds], dim='setup')
 

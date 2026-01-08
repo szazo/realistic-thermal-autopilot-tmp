@@ -58,9 +58,6 @@ def resolve_thermal_info_from_bird_dataset2(bird_dataset_path: Path,
     thermal_bird_max_altitude_da = thermal_bird_max_altitude_per_bird_da.max(
         dim=['bird_name']).assign_attrs(units='meters')
 
-    # vertical velocity
-    # bird_ds['']
-
     thermal_info_ds = xr.Dataset({
         'thermal_bird_mean_minimum_altitude':
         thermal_bird_mean_min_altitude_da,
@@ -99,22 +96,22 @@ def save_figure(fig: matplotlib.figure.Figure,
     if png:
         png_path = output_dir / f'{name}.png'
         print(f'saving {png_path} using "{backend}" backend...')
-        # fig.savefig(png_path, bbox_inches='tight', pad_inches=0)
         fig.savefig(png_path)
 
     if svg:
         svg_path = output_dir / f'{name}.svg'
         print(f'saving {svg_path} using "{backend}" backend...')
 
+        original_svg_path = None
         if backend == 'cairo':
             # cairo does not write pt in the svg, fix it
             original_svg_path = svg_path
             svg_path = output_dir / f'{name}_cairo.svg'
 
-        # fig.savefig(svg_path, bbox_inches='tight', pad_inches=0)
         fig.savefig(svg_path, transparent=transparent_svg)
 
         if backend == 'cairo':
+            assert original_svg_path is not None
             _fix_cairo_svg(cairo_svg_path=svg_path,
                            output_svg_path=original_svg_path)
 
@@ -147,12 +144,7 @@ def write_dataframe(df: pd.DataFrame,
 
     df.to_excel(output_dir / f'{name}.xlsx', float_format=float_format)
 
-    latex_str = df.to_latex(
-        index=True,
-        escape=False,
-        longtable=longtable,
-        # float_format=float_format
-    )
+    latex_str = df.to_latex(index=True, escape=False, longtable=longtable)
 
     latex_str = latex_str.replace('\\toprule', '\\hline')
     latex_str = latex_str.replace('\\midrule', '\\hline')
@@ -160,20 +152,6 @@ def write_dataframe(df: pd.DataFrame,
 
     with open(output_dir / f'{name}.tex', 'w') as f:
         f.write(latex_str)
-
-    # exit()
-
-
-# def _format_p(p):
-
-#     if p < 0.001:
-#         return '<0.001'
-#     elif p < 0.01:
-#         return f'{p:03f}'
-#     elif p < 0.05:
-#         return f'{p:03f}'
-#     else:
-#         return f'{p:02f}'
 
 
 def format_p_star(p):
@@ -188,7 +166,6 @@ def format_p_star(p):
         return '*'
     else:
         return sigfig.round(p, sigfigs=3)
-        #return sigfig.round(p, sigfig=2) # f'{p:02f}'
 
 
 def calculate_standard_error_of_mean(std_da: xr.DataArray,

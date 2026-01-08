@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from hydra.core.config_store import ConfigStore
+from .mlflow_experiment_logger import MLFlowExperimentLoggerParameters
 from .api import ExperimentLoggerParametersBase
 from .local_tensorboard_experiment_logger import LocalTensorBoardExperimentLoggerParameters
 from .neptune_experiment_logger import NeptuneExperimentLoggerParameters
@@ -23,6 +24,12 @@ class NeptuneExperimentLoggerConfig(ExperimentLoggerConfigBase,
     _target_: str = 'trainer.experiment_logger.NeptuneExperimentLogger'
 
 
+@dataclass(kw_only=True)
+class MLFlowExperimentLoggerConfig(ExperimentLoggerConfigBase,
+                                   MLFlowExperimentLoggerParameters):
+    _target_: str = 'trainer.experiment_logger.mlflow_experiment_logger.MLFlowExperimentLogger'
+
+
 def register_experiment_logger_config_groups(base_group: str,
                                              config_store: ConfigStore):
     config_store.store(group=f'{base_group}',
@@ -31,3 +38,6 @@ def register_experiment_logger_config_groups(base_group: str,
     config_store.store(group=f'{base_group}',
                        name='neptune',
                        node=NeptuneExperimentLoggerConfig)
+    config_store.store(group=f'{base_group}',
+                       name='mlflow',
+                       node=MLFlowExperimentLoggerConfig)

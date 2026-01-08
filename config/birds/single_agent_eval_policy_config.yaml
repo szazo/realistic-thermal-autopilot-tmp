@@ -6,8 +6,7 @@ defaults:
   - env/glider/aerodynamics@evaluators.main.env.env.aerodynamics: ???
   - eval/initial_conditions@evaluators.main.env.env.params: common_initial_conditions
   - env/observation_logger@evaluators.main.observation_logger.env: singleglider_observation_logger
-  - logger@model_source_logger: neptune
-  - logger@logger: local_tensorboard
+  - logger@logger: local_tensorboard_logger
   - override hydra/job_logging: custom_logging
   - _self_
 
@@ -15,14 +14,9 @@ device: max_memory_cuda
 
 experiment_name: single_agent_policy_eval
 
-model_source_logger:
-  project: szazo/glider
-  with_existing_id: ???
-  readonly: true
-
-logger:
-  log_dir: ${hydra:runtime.output_dir}/tensorboard
-  flush_secs: 10
+evaluation_policy:
+  path: ???
+  checkpoint: ???
 
 evaluators:
   main:
@@ -37,7 +31,7 @@ evaluators:
       log_buffer_size: 100000
       additional_columns:
         agent_type: ai
-        training: ${model_source_logger.with_existing_id}
+        training: ${evaluation_policy.path}
     env:
       vectorized:
         count: 1

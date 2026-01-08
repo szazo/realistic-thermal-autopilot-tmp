@@ -1,4 +1,8 @@
 [core]
-    remote = hal
+    remote = hal_snapshot_http
 ['remote "hal"']
     url = ssh://zszarvas@hal.elte.hu:/data/users/zszarvas/glider_dvc_repo
+['remote "hal_snapshot_ssh"']
+    url = ssh://zszarvas@hal.elte.hu:/data/users/zszarvas/glider_realistic_dvc_public_repo
+['remote "hal_snapshot_http"']
+    url = https://hal.elte.hu/gliderl

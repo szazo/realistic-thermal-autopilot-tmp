@@ -22,8 +22,9 @@ class ExperimentLoggerParameterStore:
         params = None
         with tempfile.TemporaryDirectory() as tmp:
             target_path = os.path.join(tmp, 'parameters.pkl')
-            self._experiment_logger.query_file('parameters_pkl',
-                                               destination_path=target_path)
+
+            self._experiment_logger.query_dict_pickle(
+                key='parameters', destination_path=target_path)
 
             # deserialize
             with open(target_path, 'rb') as f:

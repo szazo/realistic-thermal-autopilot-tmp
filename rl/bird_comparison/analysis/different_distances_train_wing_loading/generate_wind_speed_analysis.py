@@ -11,7 +11,6 @@ import matplotlib.gridspec as gridspec
 import matplotlib.axes
 import matplotlib.ticker as ticker
 from mpl_toolkits.axes_grid1 import Divider, Size
-from icecream import ic
 import tyro
 import seaborn as sns
 
@@ -51,8 +50,6 @@ def _plot_altitude_achievement_percent_for_different_wind_speeds_scatter(
     thermal_mean_wind_speed_da = ds['horizontal_air_velocity_earth_m_s'].mean(
         dim=['setup', 'start_distance', 'episode', 'time_s'])
 
-    ic(ds['altitude_achievement_percent'].mean(dim=['episode']))
-
     ds = ds.assign(thermal_mean_wind_speed=thermal_mean_wind_speed_da)
     ds = ds.assign(
         thermal_altitude_achievement_percent=ds['altitude_achievement_percent']
@@ -86,10 +83,6 @@ def _plot_altitude_achievement_percent_for_different_wind_speeds_scatter(
         fig, ax = plt.figure(figsize=(6 * cm_to_inch, 5 * cm_to_inch),
                              layout='constrained'), plt.gca()
 
-        # for setup in ['student_alone', 'student_with_birds']:
-
-        # ds_tmp =ds_new.sel(setup=setup)
-
         cmap_name = 'viridis'
         colors: ListedColormap = plt.cm.get_cmap(cmap_name, 2)
         for (setup, color) in zip(['student_alone', 'student_with_birds'],
@@ -102,15 +95,6 @@ def _plot_altitude_achievement_percent_for_different_wind_speeds_scatter(
                 markersize='start_distance',
                 ax=ax,
                 alpha=0.1)
-            # ds_new['thermal_mean_altitude_achievement_percent'].plot()
-
-            # ds_new.plot.scatter(x='thermal_mean_wind_speed',
-            #                 y='thermal_std_altitude_achievement_percent',
-            #                 hue='setup')
-            # col='setup',
-            # row='start_distance',
-            # sharex=True,
-            # sharey=True)
         distance_mean_ds.plot.scatter(
             x='thermal_mean_wind_speed',
             y='thermal_mean_altitude_achievement_percent',
@@ -142,12 +126,10 @@ def _plot_wind_speed(ds: xr.Dataset, output_dir: Path):
             'long_name'] = 'Mean horizontal wind speed'
         thermal_mean_wind_speed_da.attrs['standard_name'] = 'wind_speed'
         thermal_mean_wind_speed_da.attrs['units'] = 'm s-1'
-        ic(thermal_mean_wind_speed_da.data, thermal_mean_wind_speed_da)
         plt.bar(x=thermal_mean_wind_speed_da['thermal'],
                 height=thermal_mean_wind_speed_da)
         plt.xlabel('thermal')
         plt.ylabel('Mean horizontal speed m s-1')
-        # mean_wind_speed_da.plot.hist
 
         save_figure(
             plt.gcf(),
@@ -177,7 +159,6 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
 
         ncols = 2
         nrows = int(np.ceil(nthermal / ncols))
-        ic(len(thermal_groupby.groups))
 
         # create the grid
         fig = plt.figure(figsize=(4.75, 6.))
@@ -187,7 +168,6 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
                                wspace=0.6,
                                hspace=0.6)
         gs.update(left=0.1, right=0.9, top=0.945, bottom=0.06)
-        ic(nrows, ncols)
 
         legend_handles = None
         legend_labels = None
@@ -196,29 +176,16 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
         thermal_wind_means = subset_ds[
             'horizontal_air_velocity_earth_m_s'].mean(
                 dim=['setup', 'start_distance', 'episode', 'time_s'])
-        ic(thermal_wind_means)
-        ic(thermal_wind_means.argsort().values)
 
         sorted_indices = thermal_wind_means.argsort().values
         ordered = thermal_wind_means.coords['thermal'].values[sorted_indices]
 
-        ic(ordered)
-
         subset_ds = subset_ds.sel(thermal=ordered)
-        ic(subset_ds)
 
-        # for i, label in enumerate(ordered):
-
-        #     thermal_ds = subset_ds.sel(thermal=label)
-        # exit()
-
-        axes = []
         for i, label in enumerate(ordered):
 
             thermal_ds = subset_ds.sel(thermal=label)
             row, col = divmod(i, ncols)
-            ic(row, col)
-            ic(i, label, thermal_ds.sizes)
 
             # create the divider
             pos = gs[row, col].get_position(fig)
@@ -229,7 +196,6 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
                      va='bottom')
 
             horiz = [Size.Scaled(0.75), Size.Fixed(0.1), Size.Scaled(0.25)]
-            # horiz = [Size.Scaled(0.25), Size.Fixed(0.1), Size.Scaled(0.75)]
             vert = [Size.Scaled(1)]
             divider = Divider(fig, pos.bounds, horiz, vert, aspect=False)
 
@@ -239,7 +205,6 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
             wind_ax = fig.add_axes(divider.get_position(),
                                    axes_locator=divider.new_locator(nx=2,
                                                                     ny=0))
-            #ax1.set_visible(False)  # used only as placeholder
             placeholder_ax.set_ylabel('Start distance $(\\mathrm{m})$',
                                       labelpad=20)
             placeholder_ax.set_xticks([])
@@ -254,10 +219,6 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
             fig.canvas.draw()
 
             default_palette = sns.color_palette()
-            ic(default_palette)
-
-            # prop_cycle = plt.rcParams['axes.prop_cycle']
-            # colors = prop_cycle.by_key()['color']
 
             df = thermal_ds.to_dataframe()
 
@@ -298,9 +259,7 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
                 distance_value = distance.values.item()
                 pos = histogram_divider.get_position()
                 assert isinstance(pos, tuple)
-                ic(pos)
-                shared = histogram_axes[0] if i > 0 else None
-                ic(shared)
+
                 histogram_ax = fig.add_axes(
                     pos,
                     axes_locator=histogram_divider.new_locator(nx=0, ny=i * 2))
@@ -336,20 +295,16 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
             for i, distance in enumerate(distances):
                 current_distance_da = altitude_achievement_percent_da.sel(
                     start_distance=distance)
-                # ic(current_distance_da)
 
                 df = current_distance_da.to_dataframe()
 
                 ticks = np.arange(0, 101, 10)
-                ic(ticks)
 
                 histogram_ax = histogram_axes[i]
                 distance_value = distance.values.item()
                 histogram_ax.set_ylabel(f'${distance_value}$',
                                         rotation=0.,
                                         labelpad=10)
-
-                ic(default_palette)
 
                 palette = {
                     'student_alone': default_palette[3],
@@ -369,7 +324,6 @@ def _plot_wind_speed_with_achievement_percent(ds: xr.Dataset,
 
                 histogram_ax.set_xlim(-5, 105)
 
-                ic(i)
                 if i == 0:
                     # save the legend values
                     legend = histogram_ax.get_legend()
@@ -416,7 +370,6 @@ def _plot_thermal_vertical_velocity(ds: xr.Dataset, output_dir: Path):
 
     vertical_velocity_ds = ds[['air_velocity_earth_m_per_s_z']]
     vertical_velocity_da = vertical_velocity_ds['air_velocity_earth_m_per_s_z']
-    ic(vertical_velocity_da.count(), vertical_velocity_da.sizes)
 
     with select_plot_style('science', _ADDITIONAL_RC_PARAMS):
         df = vertical_velocity_ds.to_dataframe()
@@ -439,14 +392,11 @@ def _plot_thermal_vertical_velocity(ds: xr.Dataset, output_dir: Path):
     reasonable_range = [-2., 5.]
     reasonable_da = (vertical_velocity_da >= reasonable_range[0]) & (
         vertical_velocity_da <= reasonable_range[1])
-    ic(reasonable_da.sum().item())
 
     dims = ['setup', 'start_distance', 'episode', 'time_s']
 
     count = vertical_velocity_da.count(dim=dims)
     reasonable_count = reasonable_da.sum(dim=dims)
-
-    ic(count, reasonable_count)
 
     stat_ds = xr.Dataset(
         dict(min=vertical_velocity_da.min(dim=dims),
@@ -479,20 +429,11 @@ def _plot_thermal_bird_vertical_velocity(output_dir: Path):
                 dim=['bird_name', 'episode', 'time_s']).assign_attrs(
                     units='m s-1')
 
-        ic(thermal_mean_vertical_velocity_da)
-        ic(thermal_mean_vertical_velocity_da.dims)
-
-        # thermal_mean_vertical_velocity_da.attrs[
-        #     'long_name'] = 'Mean vertical velocity'
-        # thermal_mean_wind_speed_da.attrs['standard_name'] = 'wind_speed'
-        # thermal_mean_vertical_velocity_da.attrs['units'] = 'm s-1'
-
         plt.bar(x=thermal_mean_vertical_velocity_da['thermal'],
                 height=thermal_mean_vertical_velocity_da)
 
         plt.xlabel('thermal')
         plt.ylabel('Mean vertical speed m s-1')
-        # mean_wind_speed_da.plot.hist
 
         save_figure(
             plt.gcf(),

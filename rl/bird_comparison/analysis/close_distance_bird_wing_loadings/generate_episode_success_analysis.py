@@ -1,11 +1,6 @@
 import logging
-from typing import cast, Any
 from pathlib import Path
-import scipy.stats as stats
-from utils.plot_style import select_plot_style
 import xarray as xr
-from dataclasses import dataclass
-from icecream import ic
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -54,26 +49,12 @@ def _plot_altitude_achievement_percent_per_thermal_per_bird(
                                                            col='thermal',
                                                            col_wrap=3)
 
-    # ds.plot()
-
-    # altitude_achievement_percent_episode_mean.plot.line(
-    #     x='bird_name',
-    #     hue='setup',
-    #     col='thermal',
-    #     kind='bar'
-    # )
-
-    # plt.bar(x=ds['bird_name'],
-    #         height=10.,
-    #         hue='setup',
-    #         col='thermal')
     save_figure(
         plt.gcf(),
         output_dir=output_dir,
         name=
         'from_close_distance_using_bird_wing_loadings__altitude_achievement_percent'
     )
-    # plt.show()
 
     altitude_achievement_percent_episode_mean = altitude_achievement_percent_episode_mean.assign_coords(
         bird_name=altitude_achievement_percent_episode_mean.
@@ -91,8 +72,6 @@ def _plot_altitude_achievement_percent_per_thermal_per_bird(
         name=
         'from_close_distance_using_bird_wing_loadings__altitude_achievement_percent_colormesh'
     )
-
-    # plt.show()
 
 
 def _generate_per_thermal_and_per_bird_success_analysis(
@@ -204,8 +183,6 @@ def main(policy_neptune_run_id: str, episode_count: int):
     ds = load_close_distance_dataset(
         policy_neptune_run_id=policy_neptune_run_id,
         episode_count=episode_count)
-
-    ic(ds)
 
     generate_episode_success_analysis(ds)
 

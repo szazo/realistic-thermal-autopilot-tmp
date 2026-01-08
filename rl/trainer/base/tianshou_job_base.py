@@ -17,7 +17,8 @@ from ..common import TianshouModelConfigBase
 
 @dataclass
 class TianshouJobParametersBase:
-    evaluators: dict[str, EvaluatorConfigBase] = MISSING
+    evaluators: dict[str, EvaluatorConfigBase] = field(
+        default_factory=lambda: dict())
     statistics: dict[str, StatisticsConfigBase] = field(
         default_factory=lambda: dict())
     experiment_name: str = MISSING

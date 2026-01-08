@@ -2,7 +2,7 @@ from typing import Literal
 from dataclasses import dataclass
 from pathlib import Path
 import functools
-from bird_comparison.analysis.different_distances_train_wing_loading.generate_altitude_achievement_percent_by_distance_analysis import save_figure
+from ..common.dataset_utils import save_figure
 from thermal.visualization.thermal_cross_section_plot import VerticalPlotParameters
 from thermal.visualization import ThermalCrossSectionPlot, ThermalPlotDataSerializer
 from utils.plot_style import select_plot_style
@@ -14,8 +14,6 @@ import matplotlib.axes
 from mpl_toolkits.axes_grid1 import Divider, Size
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset, zoomed_inset_axes
 from bird_comparison.analysis.common.thermal_map import resolve_thermal_mapping
-
-from icecream import ic
 
 
 @dataclass
@@ -52,8 +50,6 @@ def main(
         policy_neptune_run_id=datasource.policy_neptune_run_id,
         episode_count=datasource.episode_count)
 
-    ic(ds.data_vars)
-
     # select thermal, bird, episode
 
     thermal_id = plot_params.thermal
@@ -89,42 +85,21 @@ def main(
     bird_y = bird_ds['position_earth_m_y']
     bird_z = bird_ds['position_earth_m_z']
 
-    # ic(x.values)
-    # ic(z.values)
-    # ic(x.coords['time_s'])
-
-    # ic(bird_ds)
-
     thermal_id = ai_ds['thermal_id'].item()
-    ic(thermal_id)
 
     output_name = f'{thermal_id}-{bird_name}-{episode}'
 
     _, vertical_plot_data = _load_thermal_plot_data(thermal_id=thermal_id)
 
-    # select bird trajectory
-
     # create the figure
     _ADDITIONAL_RC_PARAMS = {
-        # 'xtick.top': False,
-        # 'axes.spines.top': False,
-        # 'ytick.right': False,
-        # 'axes.spines.right': False,
         'savefig.bbox': None,  # the default 'tight' caused colorbar issues
-        # 'savefig.pad_inches': 0.1
     }
 
     # using Agg engine, because with Cairo, there are positional issues at the axes
     with select_plot_style('science',
                            _ADDITIONAL_RC_PARAMS,
                            engine_override='Agg'):
-        # if True:
-
-        # a = str(plt.rcParams)
-        # with open('/home/szazo/ieee.txt', 'w') as f:
-        #     f.write(a)
-        # ic(plt.rcParams)
-        # exit()
 
         cm_to_inch = 1 / 2.54
 
@@ -157,9 +132,6 @@ def main(
                                               horizontal, 0.)
         vertical_figsize = functools.reduce(lambda x, y: x + y.fixed_size,
                                             vertical, 0.)
-
-        # ic(horizontal_figsize, vertical_figsize)
-        # exit()
 
         fig = plt.figure(figsize=(horizontal_figsize, vertical_figsize))
         divider = Divider(fig,
@@ -212,14 +184,7 @@ def main(
         inset_xlim = (10, 130)
         inset_ylim = (900, 1000)
 
-        # inset_ax = ax.inset_axes(
-        #     (0.2, 0.5, 0.7, 0.7))
-
         inset_ax = zoomed_inset_axes(ax, zoom=2, loc='lower right')
-        #, bbox_to_anchor=(0.95, 0.95), bbox_transform=ax.figure.transFigure)
-
-        # inset_ax = inset_axes(ax, width='30%', height='30%', loc='lower right')
-        # inset_ax.set_aspect('equal', adjustable='datalim')
         inset_ax.plot(ai_y, ai_z, label='AI', color='#0c5da5ff', linewidth=1.)
         inset_ax.plot(bird_y,
                       bird_z,
@@ -246,8 +211,6 @@ def main(
             show_title=False)
 
         _clear_inset_axes(inset_ax)
-        #ax.indicate_inset_zoom(inset_ax,  edgecolor="black", alpha=1,lw=0.7)
-        # ax.indicate_inset_zoom
         mark_inset(ax, inset_ax, loc1=2, loc2=3, fc="none", ec="0.5")
 
         ax.legend()
@@ -256,17 +219,13 @@ def main(
 
         plt.show()
 
-    ic(ai_ds)
-
 
 def _clear_inset_axes(inset_ax: matplotlib.axes.Axes):
-    # hide the inset ticks, labels, legend
     inset_ax.set_xticks([])
     inset_ax.set_yticks([])
     inset_ax.set_xlabel('')
     inset_ax.set_ylabel('')
     inset_ax.set_title('')
-    # inset_ax.get_legend().remove()
 
 
 def _load_thermal_plot_data(thermal_id: str):

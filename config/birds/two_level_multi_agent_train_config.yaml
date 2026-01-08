@@ -9,12 +9,11 @@ defaults:
   - trainer: onpolicy
   - trainer/stop_fn: mean_reward_stop
   - model: multi_agent
-  - logger@model.non_learning.model_source_logger: neptune_logger
   - model@model.learning: ppo_multi_level_transformer
   - model@model.learning.transformer_net: two_level_transformer
   - model/ppo_policy/dist_fn@model.learning.ppo_policy.dist_fn: categorical
   - model/optimizer@model.learning.optimizer: adam
-  - logger@logger: neptune_logger
+  - logger@logger: mlflow_logger
   - override hydra/job_logging: custom_logging
   - _self_
 
@@ -35,9 +34,9 @@ trainer:
 model:
   non_learning:
     device: cpu
-    model_source_logger:
-      with_existing_id: ???
-      readonly: true
+    policy_checkpoint:
+      path: ???
+      checkpoint: ???
   learning_agent_ids:
     - student0
   default_action_for_missing_policy: 0.
@@ -286,3 +285,5 @@ hydra:
         level: DEBUG
       SingleAgentBestWeightsSaver:
         level: DEBUG
+      GliderInitialTangentPosition:
+        level: INFO

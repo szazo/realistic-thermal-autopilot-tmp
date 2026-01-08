@@ -4,9 +4,6 @@ defaults:
   - override logger@logger: local_tensorboard_logger
   - _self_
 
-model_source_logger:
-  with_existing_id: ???
-
 evaluators:
   main:
     # seed: 45

@@ -102,10 +102,13 @@ class NeptuneExperimentLogger(ExperimentLoggerInterface):
         if log_as_pickle:
             run[f"{key}_pkl"].upload(neptune.types.File.as_pickle(dictionary))
 
+    def query_dict_pickle(self, key: str, destination_path: str):
+        self.query_file(key=f'{key}_pkl', destination_path=destination_path)
+
     # REVIEW: rename to log_series or something similar
     def log_metrics(self,
                     key: str,
-                    value: float | str | Number | np.number,
+                    value: float | str | np.number,
                     step: int | None = None):
         self._log.debug('log_metrics; key=%s,value=%s,step=%s', key, value,
                         step)

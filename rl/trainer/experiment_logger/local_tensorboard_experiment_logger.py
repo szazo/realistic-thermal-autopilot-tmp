@@ -38,6 +38,10 @@ class LocalTensorBoardExperimentLogger(ExperimentLoggerInterface):
         self._writer.add_text(tag=key, text_string=path)
         self._file_cache.set(key=key, path=path)
 
+    def query_dict_pickle(self, key: str, destination_path: str):
+
+        self.query_file(key=f'{key}', destination_path=destination_path)
+
     def query_file(self, key: str, destination_path: str):
 
         if self._file_cache.get(key=key, destination_path=destination_path):
@@ -86,7 +90,7 @@ class LocalTensorBoardExperimentLogger(ExperimentLoggerInterface):
 
     def log_metrics(self,
                     key: str,
-                    value: float | str | Number | np.number,
+                    value: float | str | np.number,
                     step: int | None = None):
         self._log.debug('log_metrics; key=%s,value=%s,step=%s', key, value,
                         step)

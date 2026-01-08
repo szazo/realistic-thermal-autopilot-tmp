@@ -1,25 +1,26 @@
 import logging
 from typing import cast, Any, Literal
 from pathlib import Path
-from bird_comparison.analysis.different_distances_train_wing_loading.generate_altitude_achievement_percent_by_distance_analysis import calculate_95_confidence_interval_from_sem, calculate_standard_error_of_mean, format_p_star, write_dataframe
 import scipy.stats as stats
 from utils.plot_style import select_plot_style
 import xarray as xr
 from dataclasses import dataclass, asdict
-from icecream import ic
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as ticker
 import matplotlib.colors as mcolors
-import matplotlib as mpl
 import tyro
 import seaborn as sns
 import pandas as pd
 import sigfig
 from mpl_toolkits.axes_grid1 import Divider, Size
 
-from bird_comparison.analysis.common.dataset_utils import save_figure
-from bird_comparison.analysis.common.add_altitude_achievement_percent import add_agent_initial_and_maximum_altitude, add_altitude_achievement_percent
+from bird_comparison.analysis.common.dataset_utils import (
+    save_figure, format_p_star, write_dataframe,
+    calculate_standard_error_of_mean,
+    calculate_95_confidence_interval_from_sem)
+from bird_comparison.analysis.common.add_altitude_achievement_percent import (
+    add_agent_initial_and_maximum_altitude, add_altitude_achievement_percent)
 from bird_comparison.analysis.common.thermal_map import thermal_colormap
 from bird_comparison.analysis.close_distance_bird_wing_loadings.load_close_distance_dataset import load_close_distance_dataset
 from utils.logging import configure_logger
@@ -53,8 +54,6 @@ def generate_vertical_velocity_analysis(
         bird_maximum_altitude_reference_variable=
         'thermal_bird_maximum_altitude_per_bird')
 
-    ic(ds['altitude_achievement_percent'].sel(setup='birds'))
-
     logger.debug('done')
 
     _plot_thermal_vertical_velocity(ds, output_dir)
@@ -87,20 +86,6 @@ def generate_vertical_velocity_analysis(
                                           output_dir=output_dir / 'linregress',
                                           name=linregress_name)
 
-            # ic(a.values, b.values)
-
-            # xr.apply_ufunc(calculate_linregress,
-            #                vertical_velocities_ds['bird_vertical_velocity_mean'],
-            #                vertical_velocities_ds['student_alone_vertical_velocity_mean']
-            #                )
-
-            # calculate_linregress(vertical_velocities_ds[])
-
-            # ic(student_alone_da)
-            # ic(bird_da)
-
-            # _ADDITIONAL_RC_PARAMS = {'errorbar.capsize': 3.0, 'lines.markersize': 4.0}
-
         # violinplot
         violin_name = f'from_close_distance_using_bird_wing_loadings__student_vs_birds_vertical_velocity_distribution{success_suffix}'
 
@@ -116,16 +101,10 @@ def _generate_linregress_analysis(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
     student_n = ai_ds['vertical_velocity_mean'].count().item()
     bird_n = bird_ds['vertical_velocity_mean'].count().item()
 
-    ic(student_n, bird_n)
-
-    # ic(vertical_velocity_ds)
-    # ic(vertical_velocity_ds['ai_vertical_velocity_mean'].count())
-
     a = bird_ds['vertical_velocity_mean']
     b = ai_ds['vertical_velocity_mean']
 
     linregress_result = _calculate_linregress(a.values, b.values)
-    ic(asdict(linregress_result))
     linregress_df = pd.DataFrame([asdict(linregress_result)])
 
     linregress_df['p_value_fmt'] = linregress_df['p'].apply(format_p_star)
@@ -135,9 +114,6 @@ def _generate_linregress_analysis(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
     linregress_df['bird_n'] = bird_n
     linregress_df['student_n'] = student_n
 
-    ic(linregress_result)
-    ic(linregress_df)
-
     write_dataframe(linregress_df, output_dir=output_dir, name=name)
 
 
@@ -146,7 +122,6 @@ def _plot_thermal_vertical_velocity(ds: xr.Dataset, output_dir: Path):
 
     vertical_velocity_ds = ds[['air_velocity_earth_m_per_s_z']]
     vertical_velocity_da = vertical_velocity_ds['air_velocity_earth_m_per_s_z']
-    ic(vertical_velocity_da.count(), vertical_velocity_da.sizes)
 
     with select_plot_style('science', _ADDITIONAL_RC_PARAMS):
         df = vertical_velocity_ds.to_dataframe()
@@ -169,14 +144,11 @@ def _plot_thermal_vertical_velocity(ds: xr.Dataset, output_dir: Path):
     reasonable_range = [-2., 5.]
     reasonable_da = (vertical_velocity_da >= reasonable_range[0]) & (
         vertical_velocity_da <= reasonable_range[1])
-    ic(reasonable_da.sum().item())
 
     dims = ['setup', 'bird_name', 'episode', 'time_s']
 
     count = vertical_velocity_da.count(dim=dims)
     reasonable_count = reasonable_da.sum(dim=dims)
-
-    ic(count, reasonable_count)
 
     stat_ds = xr.Dataset(
         dict(min=vertical_velocity_da.min(dim=dims),
@@ -209,47 +181,27 @@ def _plot_vertical_velocity_violin(ds: xr.Dataset, output_dir: Path,
     with select_plot_style('science', _ADDITIONAL_RC_PARAMS):
         fig, ax = plt.figure(figsize=(8, 6)), plt.gca()
 
-        palette = {
-            'student_alone': 'blue',
-            'student_with_birds': 'red',
-            'birds': 'green'
-        }
+        sns.violinplot(data=df,
+                       x='thermal',
+                       y='velocity_earth_m_per_s_z',
+                       hue='setup',
+                       density_norm='width',
+                       cut=0,
+                       inner='box',
+                       ax=ax)
 
-        # sampled_df = df.sample(n=100000, random_state=42)
-        # sampled_df = df
-
-        sns.violinplot(
-            data=df,
-            x='thermal',
-            y='velocity_earth_m_per_s_z',
-            hue='setup',
-            density_norm='width',
-            # bw_method=0.2,
-            # palette=palette,
-            # color="0.8",
-            cut=0,
-            inner='box',
-            ax=ax)
-
-        sns.stripplot(
-            data=df,
-            x='thermal',
-            y='velocity_earth_m_per_s_z',
-            hue='setup',
-            dodge=True,
-            size=0.5,
-            jitter=True,
-            # density_norm='width',
-            # bw_method=0.2,
-            # # palette=palette,
-            # inner='box',
-            zorder=1,
-            ax=ax,
-            legend=False)
+        sns.stripplot(data=df,
+                      x='thermal',
+                      y='velocity_earth_m_per_s_z',
+                      hue='setup',
+                      dodge=True,
+                      size=0.5,
+                      jitter=True,
+                      zorder=1,
+                      ax=ax,
+                      legend=False)
 
         save_figure(fig, output_dir=output_dir, name=name)
-
-        # plt.show()
 
 
 def _plot_vertical_velocity_scatter(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
@@ -263,7 +215,6 @@ def _plot_vertical_velocity_scatter(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
 
     wl_min = ai_ds['wing_loading'].min().item()
     wl_max = ai_ds['wing_loading'].max().item()
-    ic(wl_min, wl_max)
 
     with select_plot_style('science', _ADDITIONAL_RC_PARAMS):
 
@@ -300,15 +251,6 @@ def _plot_vertical_velocity_scatter(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
         ax.set_xlabel(
             'Bird vertical speed, $V_{Z}^{Bird}~(\\mathrm{m ~ s}^{-1})$')
         ax.set_ylabel('AI vertical speed, $V_{Z}^{AI}~(\\mathrm{m ~ s}^{-1})$')
-        # regress_x = np.linspace(
-        #     0.3,
-        #     2.0)  #  vertical_velocities_ds['bird_vertical_velocity_mean']
-
-        # regress_y = regress_x * linregress_result.slope + linregress_result.intercept
-        # ic(regress_x)
-        # ic(regress_y)
-
-        # sns.lineplot(x=regress_x, y=regress_y, ax=ax, label='regression line')
 
         ax.plot(ax.get_xlim(),
                 ax.get_ylim(),
@@ -336,16 +278,11 @@ def _plot_vertical_velocity_scatter(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
             alpha = (current_ai_ds['wing_loading'] - wl_min) / (wl_max -
                                                                 wl_min)
 
-            ic(x_da)
-            ic(current_ai_ds['wing_loading'])
-            ic(alpha)
             # currently not used, alpha based on wing loadings
             rgba_colors = [
                 mcolors.to_rgba(cc, alpha=0.2 + 0.8 * c_alpha)
                 for c_alpha in alpha.values
             ]
-            ic(rgba_colors)
-            # exit()
 
             if use_as_error_bar == 'bootstrapped_percentile':
                 # 95% bootstrap percentile CI for the mean.
@@ -407,36 +344,11 @@ def _plot_vertical_velocity_scatter(bird_ds: xr.Dataset, ai_ds: xr.Dataset,
                 elinewidth=0.5,
                 capthick=0.5)
 
-            # capsize=0.1)# ,
-            # elinewidth=0.5,
-            # capthick=0.5)
-
-
-#plt.errorbar(x, y, yerr=std_y, fmt='o', alpha=0.5, ecolor='gray')
-
-# vertical_velocities_ds.plot.scatter(
-#     x='bird_vertical_velocity_mean',
-#     y='student_vertical_velocity_mean',
-#     hue='thermal',
-#     add_legend=True,
-#     add_colorbar=False,
-#     cmap=thermal_cmap,
-#     ax=ax)
-
-# title_suffix = 'for success episodes' if only_success else ''
-# ax.set_title(f'{setup} vs Birds {title_suffix}')
-
-# fig.savefig('student_alone_with_birds.png',
-#             bbox_inches='tight',
-#             pad_inches=0)
-
         ax.xaxis.set_major_locator(ticker.MultipleLocator(0.5))
         ax.xaxis.set_minor_locator(ticker.AutoMinorLocator(n=5))
 
         ax.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
         ax.yaxis.set_minor_locator(ticker.AutoMinorLocator(n=5))
-
-        # ax.legend()
 
         save_figure(fig, output_dir=output_dir, name=name)
 
@@ -451,16 +363,11 @@ def _filter_success_episodes(ds: xr.Dataset):
 
 def _calculate_bootstrap_mean_percentiles(x, n_boot, q=[2.5, 97.5]):
 
-    # ic(x.shape, type(x))
-
     # merge the last to axes
     x = x.reshape(*x.shape[:-2], -1)
-    # ic(x, x.shape)
 
     x = x[~np.isnan(x)]
-    # valid_idx = np.argwhere(mask)
 
-    ic(len(x))
     if len(x) == 0:
         return np.array([np.nan, np.nan])
 
@@ -472,21 +379,14 @@ def _calculate_bootstrap_mean_percentiles(x, n_boot, q=[2.5, 97.5]):
     ]
     samples = np.array(sample_list)
 
-    ic(samples, samples.shape)
-
     # calculate the percentiles
     percentiles = np.percentile(samples, q)
-    ic(percentiles)
 
     return percentiles
-    # ic(len(x), x)
-
-    # return np.array([x.sum()])
 
 
 def _percentile_interval_with_bootstrapping(da: xr.DataArray, n_boot: int):
 
-    ic(da.sizes)
     percentile_da = xr.apply_ufunc(
         _calculate_bootstrap_mean_percentiles,
         da,
@@ -502,32 +402,6 @@ def _percentile_interval_with_bootstrapping(da: xr.DataArray, n_boot: int):
                                         drop=True)
 
     return percentile_low, percentile_high
-
-    # ic(percentile_da)
-    # return percentile_da
-    # print('done')
-    # exit()
-    # get non-nan mask
-    # mask = ~da.isnull()
-
-    mask = ~np.isnan(da.values)
-    valid_idx = np.argwhere(mask)
-
-    ic(valid_idx)
-
-    # # Coordinate pairs of valid locations
-    # valid_idx = np.argwhere(mask)
-
-    #     idx = da.argwhere(mask)
-    #     ic(idx)
-    exit()
-
-    # random indices for resample with replacement
-    n = da.sizes
-    ic(n)
-    exit()
-
-    pass
 
 
 def _create_vertical_velocity_comparison_ds(current_ds: xr.Dataset,
@@ -545,43 +419,11 @@ def _create_vertical_velocity_comparison_ds(current_ds: xr.Dataset,
         bird_ds = bird_ds.assign(wing_loading=first)
         return bird_ds
 
-        # ic(flat, first)
-
-        # bird_ds = bird_ds.assign(wl=first)
-
-        # return bird_ds
-
-        # mask = bird_ds.notnull()
-        # idx = mask.argmax(dim='time_s')
-        # ic(idx)
-        # ic(bird_ds.isel(time_s=idx))
-        # exit()
-        # ic(idx)
-        # ic(bird_ds.dropna(dim='time_s', how='all'))
-        # ic('alma', type(bird_ds))
-        # exit()
-        # return bird_ds
-
     current_ds = current_ds.groupby(
         'bird_name', squeeze=False).apply(lambda x: assign_wing_loading(x))
-    # ic(ds)
-    # ic(ds.sel(setup='birds')['wing_loading'])
-
-    wl = current_ds['wing_loading']
-    ic(wl)
-    # exit()
 
     # calculate mean vertical velocity by thermal and bird_name
     vertical_velocity_da = current_ds['velocity_earth_m_per_s_z']
-
-    # ic(q1_da, q3_da)
-    # ic(percentile_da)
-    # # exit()
-
-    # ic(percentile_da.dims, percentile_da.sizes)
-
-    # ic(percentile_low)
-    # ic(percentile_high)
 
     # mean and standard error
     vertical_velocity_mean_da = vertical_velocity_da.mean(
@@ -592,34 +434,6 @@ def _create_vertical_velocity_comparison_ds(current_ds: xr.Dataset,
         vertical_velocity_mean=vertical_velocity_mean_da)
     current_ds = current_ds.assign(
         vertical_velocity_std=vertical_velocity_std_da)
-
-    # calculate z-score
-    z_score_da = (vertical_velocity_da -
-                  vertical_velocity_mean_da) / vertical_velocity_std_da
-    # ic(vertical_velocity_da.count())
-    # ic(z_score_da.count())
-
-    # # filter based iqr
-    # ic(vertical_velocity_da.count())
-    # filtered_da = vertical_velocity_da.where(
-    #     (vertical_velocity_da >= q1_da - 1.5 * iqr_da) & (
-    #         vertical_velocity_da <= q3_da + 1.5 * iqr_da
-    #     )
-    # )
-    # ic(filtered_da.count())
-    # vertical_velocity_da = filtered_da
-
-    # vertical_velocity_da = vertical_velocity_da.where(z_score_da <= 0.1)
-    # current_ds = current_ds.assign(velocity_earth_m_per_s_z=vertical_velocity_da)
-
-    # # calculate again after filter
-    # vertical_velocity_mean_da = vertical_velocity_da.mean(
-    #     dim=['episode', 'time_s']).assign_attrs(units='m s-1')
-    # vertical_velocity_std_da = vertical_velocity_da.std(
-    #     dim=['episode', 'time_s']).assign_attrs(units='m s-1')
-
-    # ic(filtered_vertical_velocity_da.count())
-    # exit()
 
     # standard error of mean and 95% confidence interval of the mean
     n = current_ds['velocity_earth_m_per_s_z'].count(dim=['episode', 'time_s'])
@@ -641,59 +455,6 @@ def _create_vertical_velocity_comparison_ds(current_ds: xr.Dataset,
     current_ds = current_ds.assign(q1=q1_da)
     current_ds = current_ds.assign(q3=q3_da)
 
-    # # select the current setup
-    # ai_setup_ds = current_ds.sel(setup=setup, drop=True)
-    # ai_vertical_velocity_mean_da = ai_setup_ds['vertical_velocity_mean']
-    # ai_vertical_velocity_std_da = ai_setup_ds['vertical_velocity_std']
-    # ai_vertical_velocity_ci95_da = ai_setup_ds['vertical_velocity_ci95']
-    # ai_vertical_velocity_percentile95_low_da = ai_setup_ds['percentile_95_low']
-    # ai_vertical_velocity_percentile95_high_da = ai_setup_ds[
-    #     'percentile_95_high']
-
-    # bird
-    # bird_setup_ds = current_ds.sel(setup='birds', drop=True)
-    # bird_vertical_velocity_mean_da = bird_setup_ds['vertical_velocity_mean']
-    # bird_vertical_velocity_std_da = bird_setup_ds['vertical_velocity_std']
-    # bird_vertical_velocity_ci95_da = bird_setup_ds['vertical_velocity_ci95']
-
-    # bird_vertical_velocity_percentile95_low_da = bird_setup_ds[
-    #     'percentile_95_low']
-    # bird_vertical_velocity_percentile95_high_da = bird_setup_ds[
-    #     'percentile_95_high']
-
-    # ic(ai_vertical_velocity_ci95_da.coords)
-    # ic(bird_vertical_velocity_ci95_da.coords)
-    # exit()
-
-    # # check the nans are at the same places, then cleanup
-    # nan_match = (student_alone_da.isnull() == bird_da.isnull()).all().item()
-    # ic(nan_match)
-    # assert nan_match == True
-
-    # ic(student_alone_da.dims, student_alone_da.coords, student_alone_da)
-
-    # mask = ~student_alone_da.isnull()
-    # ic(mask)
-    # student_alone_da = student_alone_da.where(mask, drop=True)
-    # ic(student_alone_da.dims, student_alone_da.coords, student_alone_da)
-
-    # exit()
-
-    # vertical_velocities_ds = xr.Dataset({
-    #     'bird_vertical_velocity_mean':
-    #     bird_vertical_velocity_mean_da,
-    #     'bird_vertical_velocity_std':
-    #     bird_vertical_velocity_std_da,
-    #     'bird_vertical_velocity_ci95':
-    #     bird_vertical_velocity_ci95_da,
-    #     'ai_vertical_velocity_mean':
-    #     ai_vertical_velocity_mean_da,
-    #     'ai_vertical_velocity_std':
-    #     ai_vertical_velocity_std_da,
-    #     'ai_vertical_velocity_ci95':
-    #     ai_vertical_velocity_ci95_da,
-    # })
-
     return current_ds
 
 
@@ -701,19 +462,13 @@ def _calculate_linregress(x: np.ndarray,
                           y: np.ndarray) -> LinearRegressionResult:
 
     # check nans are at the same indices
-    # nan_match = (x.isnull() == y.isnull()).all()
     nan_match = np.all(np.isnan(x) == np.isnan(y))
-    ic(nan_match)
     assert nan_match == True
 
     mask = ~np.isnan(x)
     x_clean = x[mask]
     y_clean = y[mask]
 
-    ic(x_clean, x_clean.shape)
-    ic(y_clean, y_clean.shape)
-
-    # ic('XY', x, y)
     result = stats.linregress(x=x_clean, y=y_clean)
     result = cast(Any, result)
 
@@ -730,22 +485,6 @@ def main(policy_neptune_run_id: str, episode_count: int, n_bootstrap: int):
     ds = load_close_distance_dataset(
         policy_neptune_run_id=policy_neptune_run_id,
         episode_count=episode_count)
-
-    ic(ds.data_vars)
-
-    # wing_loading = ds['mass_kg'] / ds['wing_area_m2']
-
-    # exit()
-
-    # mask = ~wing_loading.isnull()
-    # first_idx = mask.argmax(dim=['setup', 'thermal', 'episode','time_s'])
-
-    # ic(first_idx)
-    # wing_loading = wing_loading.isel(first_idx)
-    # # ic(wing_loading)
-    # exit()
-
-    # ic(ds)
 
     generate_vertical_velocity_analysis(ds, n_boot=n_bootstrap)
 

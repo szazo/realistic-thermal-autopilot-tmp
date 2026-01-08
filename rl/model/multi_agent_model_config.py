@@ -1,89 +1,47 @@
 import logging
-from typing import cast
 from functools import partial
 from dataclasses import dataclass
+from trainer.common.load_policy import PolicyCheckpoint, load_policy
 from trainer.multi_agent.parallel_multi_agent_policy_manager import ParallelMultiAgentPolicyManager
 from omegaconf import MISSING
-import hydra
 import torch
 import tianshou
 import gymnasium
 from hydra.core.config_store import ConfigStore
-from trainer.experiment_logger import ExperimentLoggerConfigBase
-from trainer.common import (ExperimentLoggerParameterStore,
-                            ExperimentLoggerWeightStore,
-                            TianshouModelConfigBase)
-from trainer.statistics.api import ExperimentLoggerInterface
-from utils import find_suitable_torch_device
+from trainer.common import (TianshouModelConfigBase)
 
 
 @dataclass
 class NonLearningModelConfig(TianshouModelConfigBase):
 
+    policy_checkpoint: PolicyCheckpoint = MISSING
     device: str = 'cpu'
-    model_source_logger: ExperimentLoggerConfigBase = MISSING
     _target_: str = 'model.multi_agent_model_config.load_non_learning_model'
 
 
-# TODO: refactor
-def _create_policy_model(
-    device: torch.device, policy_config: TianshouModelConfigBase
-) -> partial[tianshou.policy.BasePolicy]:
-
-    policy = hydra.utils.instantiate(policy_config, _convert_='object')
-    policy = partial(policy, device=device)
-
-    return policy
-
-
-# TODO: copied from tianshou job base, refactor
-def load_non_learning_model(device: str,
-                            model_source_logger: ExperimentLoggerConfigBase,
+def load_non_learning_model(device: str, policy_checkpoint: PolicyCheckpoint,
                             observation_space: gymnasium.Space,
                             action_space: gymnasium.Space,
                             deterministic_eval: bool):
 
     _log = logging.getLogger('load_non_learning_model')
 
-    model_logger_instance: ExperimentLoggerInterface = cast(
-        ExperimentLoggerInterface, model_source_logger)
-
-    _log.debug('loading parameters from the experiment logger...')
-    parameter_store = ExperimentLoggerParameterStore(
-        experiment_logger=model_logger_instance)
-    parameters = parameter_store.load_parameters()
-
-    model_parameters = parameters['model']
-    _log.debug('parameters loaded; parameters.model=%s', model_parameters)
-
-    _log.debug('creating model based on the parameters...')
+    _log.debug('loading model...')
 
     # create the policy
-    found_device = find_suitable_torch_device(device)
-    policy = _create_policy_model(device=found_device,
-                                  policy_config=model_parameters)(
-                                      observation_space=observation_space,
-                                      action_space=action_space,
-                                      deterministic_eval=deterministic_eval)
+    policy_partial, weights_state_dict = load_policy(source=policy_checkpoint,
+                                                     device=device)
 
-    # load the best weights
-    _log.debug('loading best weights...')
-    weights_store = ExperimentLoggerWeightStore(
-        experiment_logger=model_logger_instance)
-    weights_state_dict = weights_store.load_best_weights(map_device=found_device)
-
-    _log.debug('weights loaded; running the evaluators...')
+    policy = policy_partial(observation_space=observation_space,
+                            action_space=action_space,
+                            deterministic_eval=deterministic_eval)
 
     policy.load_state_dict(weights_state_dict)
 
-    # create the model based on parameters from the logger
     _log.debug('model loaded')
 
     # no learning for this agent
     policy.eval()
-
-    # stop the logger, it is only used to load the non learning policy
-    model_logger_instance.stop(success=True)
 
     return policy
 
